@@ -23,7 +23,6 @@ import { HtmlView } from './html-view'
 import { type SuggestionType, getSuggestionData } from '~/utils/suggestion'
 import { env } from '~/env'
 import { api } from '~/trpc/react'
-import { uploadImageCommandHandler } from '~/server/cloudinary'
 import { markdownToHtml } from '~/utils/text'
 import { useEffect, useRef } from 'react'
 
@@ -255,54 +254,6 @@ export const MarkdownEditor = ({
                 const { code, metaKey } = event
                 if (code === 'Enter' && metaKey) {
                   onTriggerSubmit?.()
-                }
-              }}
-              onPaste={async (event) => {
-                if (env.NEXT_PUBLIC_ENABLE_IMAGE_UPLOAD) {
-                  const filesArray = Array.from(event.clipboardData.files)
-
-                  if (filesArray.length === 0) {
-                    return
-                  }
-
-                  const imageFiles = filesArray.filter((file) =>
-                    /image/i.test(file.type),
-                  )
-
-                  if (imageFiles.length === 0) {
-                    return
-                  }
-
-                  event.preventDefault()
-
-                  await uploadImageCommandHandler(
-                    event.currentTarget,
-                    imageFiles,
-                  )
-                }
-              }}
-              onDrop={async (event) => {
-                if (env.NEXT_PUBLIC_ENABLE_IMAGE_UPLOAD) {
-                  const filesArray = Array.from(event.dataTransfer.files)
-
-                  if (filesArray.length === 0) {
-                    return
-                  }
-
-                  const imageFiles = filesArray.filter((file) =>
-                    /image/i.test(file.type),
-                  )
-
-                  if (imageFiles.length === 0) {
-                    return
-                  }
-
-                  event.preventDefault()
-
-                  await uploadImageCommandHandler(
-                    event.currentTarget,
-                    imageFiles,
-                  )
                 }
               }}
               className="block w-full rounded shadow-sm bg-secondary border-secondary focus-ring"

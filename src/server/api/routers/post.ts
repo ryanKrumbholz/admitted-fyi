@@ -3,7 +3,6 @@ import { createTRPCRouter, protectedProcedure } from '../trpc'
 import { z } from 'zod'
 import { markdownToHtml } from '~/utils/text'
 import { revalidatePath } from 'next/cache'
-import { postToSlackIfEnabled } from '~/server/slack'
 
 export const postRouter = createTRPCRouter({
   feed: protectedProcedure
@@ -201,8 +200,6 @@ export const postRouter = createTRPCRouter({
           },
         },
       })
-
-      await postToSlackIfEnabled({ post, authorName: ctx.session.user.name })
 
       return post
     }),

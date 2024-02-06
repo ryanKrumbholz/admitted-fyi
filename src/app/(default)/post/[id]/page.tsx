@@ -1,5 +1,4 @@
 import { AuthorWithDate } from '~/app/_components/author-with-date'
-import { Avatar } from '~/app/_components/avatar'
 import { Banner } from '~/app/_components/banner'
 import { Button } from '~/app/_components/button'
 import { Comment, AddCommentForm } from '~/app/_components/comment'
@@ -93,16 +92,8 @@ export default async function PostPage({ params }: PostPageParams) {
           </ul>
         )}
         <div className="flex items-start gap-2 sm:gap-4">
-          <span className="hidden sm:inline-block">
-            <Avatar name={session!.user.name} src={session!.user.image} />
-          </span>
-          <span className="inline-block sm:hidden">
-            <Avatar
-              name={session!.user.name}
-              src={session!.user.image}
-              size="sm"
-            />
-          </span>
+          <span className="hidden sm:inline-block"></span>
+          <span className="inline-block sm:hidden"></span>
           <AddCommentForm postId={post.id} />
         </div>
       </div>
