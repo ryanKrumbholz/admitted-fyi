@@ -55,7 +55,6 @@ model User {
     sessions      Session[]
     posts         Post[]
     comments      Comment[]
-    role          Role         @default(USER)
 }
 
 model VerificationToken {
