@@ -27,7 +27,7 @@ export default async function EditPostPage({ params }: ProfilePageParams) {
   })
 
   const session = await getServerAuthSession()
-  const postBelongsToUser = post.author.id === session!.user.id
+  const postBelongsToUser = false
 
   return (
     <>
