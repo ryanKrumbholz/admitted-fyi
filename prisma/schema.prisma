@@ -2,72 +2,75 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider        = "prisma-client-js"
-    previewFeatures = ["fullTextSearch", "fullTextIndex"]
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 datasource db {
-    provider     = "mysql"
-    url          = env("DATABASE_URL")
-    relationMode = "prisma"
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model Account {
-    id                       String  @id @default(cuid())
-    userId                   String
-    type                     String
-    provider                 String
-    providerAccountId        String
-    refresh_token            String? @db.VarChar(2000)
-    refresh_token_expires_in Int?
-    access_token             String? @db.VarChar(2000)
-    expires_at               Int?
-    token_type               String?
-    scope                    String?
-    id_token                 String? @db.VarChar(2000)
-    session_state            String? @db.VarChar(2000)
-    oauth_token_secret       String? @db.VarChar(2000)
-    oauth_token              String? @db.VarChar(2000)
+  id                       String  @id @default(cuid())
+  userId                   String
+  type                     String
+  provider                 String
+  providerAccountId        String
+  refresh_token            String? @db.VarChar(2000)
+  refresh_token_expires_in Int?
+  access_token             String? @db.VarChar(2000)
+  expires_at               Int?
+  token_type               String?
+  scope                    String?
+  id_token                 String? @db.VarChar(2000)
+  session_state            String? @db.VarChar(2000)
+  oauth_token_secret       String? @db.VarChar(2000)
+  oauth_token              String? @db.VarChar(2000)
 
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@unique([provider, providerAccountId])
-    @@index([userId])
+  @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
-    id           String   @id @default(cuid())
-    sessionToken String   @unique
-    userId       String
-    expires      DateTime
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@index([userId])
+  @@index([userId])
 }
 
 model User {
-    id            String       @id @default(cuid())
-    name          String?
-    email         String?      @unique
-    emailVerified DateTime?
-    image         String?
-    title         String?
-    sessions      Session[]
-    posts         Post[]
-    comments      Comment[]
+  id             String           @id @default(cuid())
+  name           String?
+  email          String?          @unique
+  emailVerified  DateTime?
+  image          String?
+  title          String?
+  sessions       Session[]
+  posts          Post[]
+  comments       Comment[]
+  Account        Account[]
+  Application    Application[]
+  UserPreference UserPreference[]
 }
 
 model VerificationToken {
-    identifier String
-    token      String   @unique
-    expires    DateTime
+  identifier String
+  token      String   @unique
+  expires    DateTime
 
-    @@unique([identifier, token])
+  @@unique([identifier, token])
 }
 
 // College model
 model College {
-  id       Int      @id @default(autoincrement())
+  id       Int       @id @default(autoincrement())
   name     String
   location String
   website  String?
@@ -76,54 +79,54 @@ model College {
 
 // Program model
 model Program {
-  id         Int          @id @default(autoincrement())
-  collegeId  Int
-  name       String
-  degreeType String // Consider using an Enum for predefined values
-  department String
-  college    College      @relation(fields: [collegeId], references: [id])
+  id           Int           @id @default(autoincrement())
+  collegeId    Int
+  name         String
+  degreeType   String // Consider using an Enum for predefined values
+  department   String
+  college      College       @relation(fields: [collegeId], references: [id])
   applications Application[]
 }
 
 // Application model
 model Application {
-  id            Int      @id @default(autoincrement())
-  userId        Int
-  programId     Int
+  id             Int       @id @default(autoincrement())
+  userId         String
+  programId      Int
   submissionDate DateTime
-  status        String   // Consider using an Enum for predefined values
-  decisionDate  DateTime?
-  user          User     @relation(fields: [userId], references: [id])
-  program       Program  @relation(fields: [programId], references: [id])
+  status         String // Consider using an Enum for predefined values
+  decisionDate   DateTime?
+  user           User      @relation(fields: [userId], references: [id])
+  program        Program   @relation(fields: [programId], references: [id])
 }
 
 // Post model (if the app includes a forum or discussion board)
 model Post {
-  id        Int       @id @default(autoincrement())
-  userId    Int
-  title     String
-  content   String
-  postDate  DateTime  @default(now())
-  user      User      @relation(fields: [userId], references: [id])
-  comments  Comment[]
+  id       Int       @id @default(autoincrement())
+  userId   String
+  title    String
+  content  String
+  postDate DateTime  @default(now())
+  user     User      @relation(fields: [userId], references: [id])
+  comments Comment[]
 }
 
 // Comment model (if the app includes a forum or discussion board)
 model Comment {
-  id         Int      @id @default(autoincrement())
-  postId     Int
-  userId     Int
-  content    String
+  id          Int      @id @default(autoincrement())
+  postId      Int
+  userId      String
+  content     String
   commentDate DateTime @default(now())
-  post       Post     @relation(fields: [postId], references: [id])
-  user       User     @relation(fields: [userId], references: [id])
+  post        Post     @relation(fields: [postId], references: [id])
+  user        User     @relation(fields: [userId], references: [id])
 }
 
 // UserPreference model (optional, for storing user settings and preferences)
 model UserPreference {
-  id             Int    @id @default(autoincrement())
-  userId         Int
-  preferenceType String
+  id              Int    @id @default(autoincrement())
+  userId          String
+  preferenceType  String
   preferenceValue String
-  user           User   @relation(fields: [userId], references: [id])
+  user            User   @relation(fields: [userId], references: [id])
 }
