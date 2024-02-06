@@ -29,7 +29,7 @@ const inter = localFont({
   ],
 })
 export const metadata = {
-  title: 'Beam',
+  title: 'admitted.fyi',
 }
 
 export default async function RootLayout({

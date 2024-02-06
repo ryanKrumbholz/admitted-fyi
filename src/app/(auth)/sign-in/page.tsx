@@ -6,7 +6,7 @@ import { getServerAuthSession } from '~/server/auth'
 import { SignInButtons } from './_components/sign-in-buttons'
 
 export const metadata: Metadata = {
-  title: 'Sign In - Beam',
+  title: 'Sign In - admitted.fyi',
 }
 
 export default async function SignIn() {

@@ -7,10 +7,7 @@ await import('./src/env.js')
 /** @type {import("next").NextConfig} */
 const config = {
   images: {
-    remotePatterns: [
-      { protocol: 'https', hostname: 'res.cloudinary.com' },
-      { protocol: 'https', hostname: 'avatars.githubusercontent.com' },
-    ],
+    remotePatterns: [],
     dangerouslyAllowSVG: true,
   },
 }
