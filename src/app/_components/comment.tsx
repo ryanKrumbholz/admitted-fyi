@@ -3,7 +3,6 @@
 import { type Session } from 'next-auth'
 import { useState } from 'react'
 import { type RouterOutputs } from '~/trpc/shared'
-import { Avatar } from './avatar'
 import { AuthorWithDate } from './author-with-date'
 import {
   Menu,
@@ -50,7 +49,6 @@ export const Comment = ({ session, postId, comment }: CommentProps) => {
   if (isEditing) {
     return (
       <div className="flex items-start gap-4">
-        <Avatar name={comment.author.name!} src={comment.author.image} />
         <EditCommentForm
           postId={postId}
           comment={comment}

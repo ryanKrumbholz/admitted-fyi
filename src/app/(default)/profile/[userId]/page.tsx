@@ -1,14 +1,10 @@
-import { Avatar } from '~/app/_components/avatar'
-
 import { Pagination } from '~/app/_components/pagination'
 import { PostSummary } from '~/app/_components/post-summary'
 import DotPattern from '~/app/_svg/dot-pattern'
 
-import { env } from '~/env'
 import { getServerAuthSession } from '~/server/auth'
 import { api } from '~/trpc/server'
 import { EditProfileAction } from './_components/edit-profile'
-import { UpdateAvatarAction } from './_components/update-avatar'
 
 type ProfilePageParams = {
   params: {
@@ -59,12 +55,6 @@ export default async function ProfilePage({
     <>
       <div className="relative flex items-center gap-4 py-8 overflow-hidden">
         <div className="flex items-center gap-8">
-          {env.NEXT_PUBLIC_ENABLE_IMAGE_UPLOAD && profileBelongsToUser ? (
-            <UpdateAvatarAction name={profile.name!} image={profile.image} />
-          ) : (
-            <Avatar name={profile.name!} src={profile.image} size="lg" />
-          )}
-
           <div className="flex-1">
             <h1 className="bg-primary text-2xl font-semibold tracking-tight md:text-3xl">
               {profile.name}

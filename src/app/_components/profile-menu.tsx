@@ -13,7 +13,6 @@ import { useTheme } from 'next-themes'
 import { capitalize } from 'string-ts'
 import { signOut } from 'next-auth/react'
 import { type Session } from 'next-auth'
-import { Avatar } from './avatar'
 import { usePathname } from 'next/navigation'
 import { classNames } from '~/utils/core'
 
@@ -37,9 +36,7 @@ export const ProfileMenu = ({ session }: { session: Session | null }) => {
 
   return (
     <Menu>
-      <MenuButton className="relative inline-flex rounded-full group focus-ring">
-        <Avatar name={session!.user.name} src={session!.user.image} size="sm" />
-      </MenuButton>
+      <MenuButton className="relative inline-flex rounded-full group focus-ring"></MenuButton>
 
       <MenuItems className="w-48">
         <MenuItemsContent>
