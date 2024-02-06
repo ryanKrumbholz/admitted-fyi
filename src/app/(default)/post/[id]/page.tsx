@@ -4,6 +4,6 @@ type PostPageParams = {
   }
 }
 
-export const generateMetadata = async ({ params }: PostPageParams) => {
+export default async function PostPage({ params }: PostPageParams) {
   return <></>
 }
