@@ -12,11 +12,6 @@ datasource db {
     relationMode = "prisma"
 }
 
-enum Role {
-    USER
-    ADMIN
-}
-
 model Account {
     id                       String  @id @default(cuid())
     userId                   String
@@ -57,10 +52,8 @@ model User {
     emailVerified DateTime?
     image         String?
     title         String?
-    accounts      Account[]
     sessions      Session[]
     posts         Post[]
-    likedPosts    LikedPosts[]
     comments      Comment[]
     role          Role         @default(USER)
 }
@@ -73,46 +66,65 @@ model VerificationToken {
     @@unique([identifier, token])
 }
 
+// College model
+model College {
+  id       Int      @id @default(autoincrement())
+  name     String
+  location String
+  website  String?
+  programs Program[]
+}
+
+// Program model
+model Program {
+  id         Int          @id @default(autoincrement())
+  collegeId  Int
+  name       String
+  degreeType String // Consider using an Enum for predefined values
+  department String
+  college    College      @relation(fields: [collegeId], references: [id])
+  applications Application[]
+}
+
+// Application model
+model Application {
+  id            Int      @id @default(autoincrement())
+  userId        Int
+  programId     Int
+  submissionDate DateTime
+  status        String   // Consider using an Enum for predefined values
+  decisionDate  DateTime?
+  user          User     @relation(fields: [userId], references: [id])
+  program       Program  @relation(fields: [programId], references: [id])
+}
+
+// Post model (if the app includes a forum or discussion board)
 model Post {
-    id          Int          @id @default(autoincrement())
-    title       String       @db.VarChar(255)
-    content     String       @db.Text
-    contentHtml String       @db.Text
-    hidden      Boolean      @default(false)
-    createdAt   DateTime     @default(now())
-    updatedAt   DateTime     @updatedAt
-    author      User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
-    authorId    String
-    likedBy     LikedPosts[]
-    comments    Comment[]
-
-    @@index([authorId])
-    @@index([hidden, createdAt(sort: Desc)])
-    @@fulltext([title, content])
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  title     String
+  content   String
+  postDate  DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id])
+  comments  Comment[]
 }
 
-model LikedPosts {
-    post      Post     @relation(fields: [postId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-    postId    Int
-    user      User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-    userId    String
-    createdAt DateTime @default(now())
-
-    @@id([postId, userId])
-    @@index([postId])
-    @@index([userId])
-}
-
+// Comment model (if the app includes a forum or discussion board)
 model Comment {
-    id          Int      @id @default(autoincrement())
-    content     String   @db.Text
-    contentHtml String   @db.Text
-    createdAt   DateTime @default(now())
-    post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-    postId      Int
-    author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-    authorId    String
+  id         Int      @id @default(autoincrement())
+  postId     Int
+  userId     Int
+  content    String
+  commentDate DateTime @default(now())
+  post       Post     @relation(fields: [postId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+}
 
-    @@index([authorId])
-    @@index([postId])
+// UserPreference model (optional, for storing user settings and preferences)
+model UserPreference {
+  id             Int    @id @default(autoincrement())
+  userId         Int
+  preferenceType String
+  preferenceValue String
+  user           User   @relation(fields: [userId], references: [id])
 }
