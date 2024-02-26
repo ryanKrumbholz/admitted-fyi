@@ -2,7 +2,7 @@ import { TRPCError } from '@trpc/server'
 import { createTRPCRouter, protectedProcedure } from '../trpc'
 import { z } from 'zod'
 import { markdownToHtml } from '~/utils/text'
-import { Prisma } from '@Prisma/client'
+import { Prisma } from '@prisma/client'
 
 export const decisionRouter = createTRPCRouter({
   feed: protectedProcedure
