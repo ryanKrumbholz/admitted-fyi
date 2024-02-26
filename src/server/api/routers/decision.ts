@@ -2,7 +2,9 @@ import { TRPCError } from '@trpc/server'
 import { createTRPCRouter, protectedProcedure } from '../trpc'
 import { z } from 'zod'
 import { markdownToHtml } from '~/utils/text'
+import { PrismaClient } from '@prisma/client'
 
+const prisma = new PrismaClient()
 export const decisionRouter = createTRPCRouter({
   feed: protectedProcedure
     .input(
@@ -12,7 +14,7 @@ export const decisionRouter = createTRPCRouter({
           skip: z.number().min(0).optional(),
           userId: z.string().optional(),
           programId: z.number().optional(),
-          status: z.nativeEnum(Status).optional(),
+          status: z.nativeEnum(prisma.Status).optional(),
         })
         .optional(),
     )
