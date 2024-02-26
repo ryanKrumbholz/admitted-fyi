@@ -85,13 +85,11 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
   if (!ctx.session || !ctx.session.user) {
     throw new TRPCError({ code: 'UNAUTHORIZED' })
   }
-  const isUserAdmin = ctx.session.user.role === 'ADMIN'
 
   return next({
     ctx: {
       // infers the `session` as non-nullable
       db,
-      isUserAdmin,
       session: { ...ctx.session, user: ctx.session.user },
     },
   })

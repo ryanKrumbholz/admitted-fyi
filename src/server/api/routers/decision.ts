@@ -1,7 +1,6 @@
 import { TRPCError } from '@trpc/server'
 import { createTRPCRouter, protectedProcedure } from '../trpc'
 import { z } from 'zod'
-import { markdownToHtml } from '~/utils/text'
 import { Status } from '@prisma/client'
 
 export const decisionRouter = createTRPCRouter({
@@ -54,36 +53,35 @@ export const decisionRouter = createTRPCRouter({
       }
     }),
 
-  add: protectedProcedure
-    .input(
-      z.object({
-        programId: z.number(),
-        status: z.nativeEnum(Status),
-        content: z.string().min(1),
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      const { programId, status, content } = input
+  // add: protectedProcedure
+  //   .input(
+  //     z.object({
+  //       programId: z.number(),
+  //       status: z.nativeEnum(Status),
+  //       content: z.string().min(1),
+  //     }),
+  //   )
+  //   .mutation(async ({ ctx, input }) => {
+  //     const { programId, status, content } = input
 
-      const decision = await ctx.db.decision.create({
-        data: {
-          user: {
-            connect: {
-              id: ctx.session.user.id,
-            },
-          },
-          program: {
-            connect: {
-              id: programId,
-            },
-          },
-          status,
-          contentHtml: markdownToHtml(content),
-        },
-      })
+  //     const decision = await ctx.db.decision.create({
+  //       data: {
+  //         user: {
+  //           connect: {
+  //             id: ctx.session.user.id,
+  //           },
+  //         },
+  //         program: {
+  //           connect: {
+  //             id: programId,
+  //           },
+  //         },
+  //         status,
+  //       },
+  //     })
 
-      return decision
-    }),
+  //     return decision
+  //   }),
 
   edit: protectedProcedure
     .input(
@@ -113,7 +111,6 @@ export const decisionRouter = createTRPCRouter({
         where: { id },
         data: {
           status: data.status,
-          contentHtml: data.content ? markdownToHtml(data.content) : undefined,
         },
       })
 
