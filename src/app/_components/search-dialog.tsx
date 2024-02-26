@@ -34,7 +34,7 @@ export const SearchDialog = () => {
     [],
   )
 
-  const { data, isFetching } = api.post.search.useQuery(
+  const { data, isFetching } = api.decision.search.useQuery(
     {
       query: debouncedValue,
     },
@@ -82,7 +82,7 @@ export const SearchDialog = () => {
                   className="w-full block py-3.5 pl-10 pr-3 leading-tight data-[selected=true]:bg-blue-600 data-[selected=true]:text-white"
                   onSelect={() => {
                     toggleOpen()
-                    router.push(`/post/${result.id}`)
+                    router.push(`/decision/${result.id}`)
                   }}
                   value={result.title}
                 >
