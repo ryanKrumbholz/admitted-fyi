@@ -53,11 +53,10 @@ model User {
   image          String?
   title          String?
   sessions       Session[]
-  posts          Post[]
-  comments       Comment[]
   Account        Account[]
-  Application    Application[]
   UserPreference UserPreference[]
+  Decision       Decision[]
+  Verification   Verification[]
 }
 
 model VerificationToken {
@@ -68,7 +67,6 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-// College model
 model College {
   id       Int       @id @default(autoincrement())
   name     String
@@ -77,56 +75,51 @@ model College {
   programs Program[]
 }
 
-// Program model
 model Program {
-  id           Int           @id @default(autoincrement())
+  id           Int            @id @default(autoincrement())
   collegeId    Int
   name         String
   degreeType   String // Consider using an Enum for predefined values
   department   String
-  college      College       @relation(fields: [collegeId], references: [id])
-  applications Application[]
+  college      College        @relation(fields: [collegeId], references: [id])
+  decisions    Decision[]
+  Verification Verification[]
 }
 
-// Application model
-model Application {
-  id             Int       @id @default(autoincrement())
-  userId         String
+model Decision {
+  id             Int          @id @default(autoincrement())
+  userId         String?
   programId      Int
-  submissionDate DateTime
-  status         String // Consider using an Enum for predefined values
-  decisionDate   DateTime?
-  user           User      @relation(fields: [userId], references: [id])
-  program        Program   @relation(fields: [programId], references: [id])
+  status         Status
+  date           DateTime     @default(now())
+  program        Program      @relation(fields: [programId], references: [id])
+  user           User?        @relation(fields: [userId], references: [id])
+  verification   Verification @relation(fields: [verificationId], references: [id])
+  verificationId Int
 }
 
-// Post model (if the app includes a forum or discussion board)
-model Post {
-  id       Int       @id @default(autoincrement())
-  userId   String
-  title    String
-  content  String
-  postDate DateTime  @default(now())
-  user     User      @relation(fields: [userId], references: [id])
-  comments Comment[]
+model Verification {
+  id        Int        @id @default(autoincrement())
+  verified  Boolean
+  imgUrl    String
+  user      User?      @relation(fields: [userId], references: [id])
+  program   Program    @relation(fields: [programId], references: [id])
+  userId    String?
+  programId Int
+  Decision  Decision[]
 }
 
-// Comment model (if the app includes a forum or discussion board)
-model Comment {
-  id          Int      @id @default(autoincrement())
-  postId      Int
-  userId      String
-  content     String
-  commentDate DateTime @default(now())
-  post        Post     @relation(fields: [postId], references: [id])
-  user        User     @relation(fields: [userId], references: [id])
-}
-
-// UserPreference model (optional, for storing user settings and preferences)
 model UserPreference {
   id              Int    @id @default(autoincrement())
   userId          String
   preferenceType  String
   preferenceValue String
   user            User   @relation(fields: [userId], references: [id])
+}
+
+enum Status {
+  WAITLISTED
+  INTERVIEW
+  ACCEPTED
+  REJECTED
 }

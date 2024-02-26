@@ -9,7 +9,6 @@ import { ThemeProvider } from '~/app/_providers/theme'
 import { Toaster } from '~/app/_providers/toaster'
 
 import { SearchDialog } from './_components/search-dialog'
-import { AlertDialog } from './_components/alert-dialog'
 
 const inter = localFont({
   variable: '--font-sans',
@@ -46,7 +45,6 @@ export default async function RootLayout({
 
             <Toaster />
             <SearchDialog />
-            <AlertDialog />
           </TRPCReactProvider>
         </ThemeProvider>
       </body>
