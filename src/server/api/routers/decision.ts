@@ -12,7 +12,7 @@ export const decisionRouter = createTRPCRouter({
           skip: z.number().min(0).optional(),
           userId: z.string().optional(),
           programId: z.number().optional(),
-          status: z.string().optional(),
+          status: z.nativeEnum(Status).optional(),
         })
         .optional(),
     )
