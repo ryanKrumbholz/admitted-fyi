@@ -4,7 +4,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import Link, { type LinkProps } from 'next/link'
 
 import { classNames } from '~/utils/core'
-import Spinner from '../_svg/spinner'
+
 
 const button = cva(
   'inline-flex items-center justify-center font-semibold transition-colors rounded-full focus-ring px-4 text-sm h-8',
@@ -59,7 +59,6 @@ export const Button = ({
         disabled={disabled}
         {...props}
       >
-        {isLoading && <Spinner className="w-4 h-4 mr-2 -ml-1 animate-spin" />}
         {isLoading && loadingChildren ? loadingChildren : children}
       </button>
     )
@@ -72,7 +71,7 @@ export const Button = ({
       })}
       {...props}
     >
-      {isLoading && <Spinner className="w-4 h-4 mr-2 -ml-1 animate-spin" />}
+
       {isLoading && loadingChildren ? loadingChildren : children}
     </Link>
   )

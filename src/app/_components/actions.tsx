@@ -4,7 +4,7 @@ import { type Session } from 'next-auth'
 import { Button } from './button'
 import { ProfileMenu } from './profile-menu'
 import { useSearchStore } from '~/app/_hooks/use-search-store'
-import SearchIcon from '../_svg/search-icon'
+
 
 export const Actions = ({ session }: { session: Session | null }) => {
   const { toggleOpen } = useSearchStore()
@@ -16,7 +16,7 @@ export const Actions = ({ session }: { session: Session | null }) => {
         onClick={toggleOpen}
         aria-label="Search"
       >
-        <SearchIcon className="h-4 w-4 text-primary" />
+
       </Button>
       <ProfileMenu session={session} />
 

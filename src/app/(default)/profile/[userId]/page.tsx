@@ -1,5 +1,4 @@
 import { Pagination } from '~/app/_components/pagination'
-import DotPattern from '~/app/_svg/dot-pattern'
 
 import { getServerAuthSession } from '~/server/auth'
 import { api } from '~/trpc/server'
@@ -67,7 +66,6 @@ export default async function ProfilePage({
           />
         )}
 
-        <DotPattern />
       </div>
     </>
   )

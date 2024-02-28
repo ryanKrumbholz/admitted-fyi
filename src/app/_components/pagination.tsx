@@ -2,8 +2,6 @@
 
 import { usePathname } from 'next/navigation'
 import { Button } from './button'
-import ChevronLeftIcon from '../_svg/chevron-left-icon'
-import ChevronRightIcon from '../_svg/chevron-right-icon'
 
 type PaginationProps = {
   itemCount: number
@@ -39,7 +37,7 @@ export const Pagination = ({
         }
       >
         <span className="mr-1">
-          <ChevronLeftIcon />
+
         </span>
         Newer posts
       </Button>
@@ -57,7 +55,7 @@ export const Pagination = ({
       >
         Older posts{' '}
         <span className="ml-1">
-          <ChevronRightIcon />
+
         </span>
       </Button>
     </div>

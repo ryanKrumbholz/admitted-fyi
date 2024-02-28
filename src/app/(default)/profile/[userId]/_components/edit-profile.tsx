@@ -5,7 +5,6 @@ import { type SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import { Button } from '~/app/_components/button'
 import { useDialogStore } from '~/app/_hooks/use-dialog-store'
-import EditIcon from '~/app/_svg/edit-icon'
 import { api } from '~/trpc/react'
 
 type EditFormData = {
@@ -78,7 +77,6 @@ export const EditProfileAction = ({
           })
         }}
       >
-        <EditIcon className="w-4 h-4" />
       </Button>
     </div>
   )

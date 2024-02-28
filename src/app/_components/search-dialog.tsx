@@ -6,8 +6,6 @@ import { useHotkeys } from 'react-hotkeys-hook'
 import { useRouter } from 'next/navigation'
 import { useDebounce } from 'use-debounce'
 import { api } from '~/trpc/react'
-import SearchIcon from '../_svg/search-icon'
-import SpinnerIcon from '../_svg/spinner'
 import { useSearchStore } from '~/app/_hooks/use-search-store'
 
 export const SearchDialog = () => {
