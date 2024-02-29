@@ -99,7 +99,7 @@ model Verification {
   id        String    @id @default(cuid())
   verified  Boolean
   imgUrl    String
-  decisions Decision?
+  decision Decision?
 }
 
 model UserPreference {

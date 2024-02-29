@@ -3,10 +3,10 @@
 import React, { useEffect, useState } from 'react';
 import { Pagination } from '../../_components/pagination';
 import Filters from './_components/filter-bar';
-import SearchBar from './_components/search-bar';
 import { api } from '~/trpc/react'
 import { type Decision } from '~/app/_models/Decision';
 import DecisionCard from './_components/decision-card';
+import SearchBar from '~/app/_components/search-bar';
 
 const DECISIONS_PER_PAGE = 20;
 

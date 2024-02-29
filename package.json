@@ -30,6 +30,7 @@
     "@trpc/react-query": "^10.43.6",
     "@trpc/server": "^10.43.6",
     "@tryfabric/mack": "^1.2.1",
+    "aws-sdk": "^2.1568.0",
     "class-variance-authority": "^0.7.0",
     "cloudinary": "^1.41.0",
     "clsx": "^2.0.0",
