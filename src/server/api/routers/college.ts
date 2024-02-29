@@ -17,18 +17,22 @@ export const collegeRouter = createTRPCRouter({
 
       const where = searchString
         ? {
-            OR: [
-              { name: { contains: searchString, mode: 'insensitive' } },
-              { description: { contains: searchString, mode: 'insensitive' } },
-            ],
-          }
-        : {};
+          OR: [
+            {
+              name: {
+                startsWith: searchString, // Priority to names that start with the search term
+              },
+            },
+          ],
+        } : {};
 
       const colleges = await ctx.db.college.findMany({
         take,
         skip,
         where,
-        orderBy: { name: 'asc' },
+        orderBy: {
+          name: 'asc', // Adjust ordering as needed
+        },
       });
 
       const collegeCount = await ctx.db.college.count({ where });

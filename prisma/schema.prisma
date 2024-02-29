@@ -65,6 +65,8 @@ model College {
   url       String?
   programs  Program[]
   decisions Decision[]
+  
+  @@fulltext([name])
 }
 
 model Program {
@@ -76,6 +78,8 @@ model Program {
   college    College    @relation(fields: [collegeId], references: [id])
   decisions  Decision[]
   watchers   User[]     @relation("ProgramWatchList")
+
+  @@fulltext([name])
 }
 
 model Decision {
@@ -112,10 +116,10 @@ model UserPreference {
 
 model Stats {
   id         String     @id @default(cuid())
-  gpa        Float
-  greVerbal  Int
-  greWritten Int
-  degreeType DegreeType
+  gpa        Float?
+  greVerbal  Int?
+  greWritten Int?
+  degreeType DegreeType?
   decision   Decision?
 }
 

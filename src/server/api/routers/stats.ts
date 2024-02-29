@@ -7,10 +7,10 @@ export const statsRouter = createTRPCRouter({
   add: publicProcedure
     .input(
       z.object({
-        gpa: z.number(),
-        greVerbal: z.number(),
-        greWritten: z.number(),
-        degreeType: z.nativeEnum(DegreeType),
+        gpa: z.number().optional(),
+        greVerbal: z.number().optional(),
+        greWritten: z.number().optional(),
+        degreeType: z.nativeEnum(DegreeType).optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {

@@ -7,21 +7,32 @@ interface Option {
 }
 
 interface SearchableDropdownProps {
+  label: string;
+  name: string;
+  id: string;
+  placeholder: string;
   options: Option[];
   onOptionSelected: (option: Option) => void;
+  onSearch: (searchTerm: string) => void;
 }
 
-const SearchableDropdown: React.FC<SearchableDropdownProps> = ({ options, onOptionSelected }) => {
+const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
+  options,
+  onOptionSelected,
+  onSearch,
+  label,
+  name,
+  placeholder,
+  id 
+  }) => {
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [filteredOptions, setFilteredOptions] = useState<Option[]>(options);
   const [showOptions, setShowOptions] = useState<boolean>(false);
+  const [value, setValue] = useState('');
 
   useEffect(() => {
-    const filtered = options.filter(option =>
-      option.label.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredOptions(filtered);
-  }, [searchTerm, options]);
+    onSearch(searchTerm);
+    setValue(searchTerm);
+  }, [searchTerm, onSearch]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -30,26 +41,25 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({ options, onOpti
 
   const handleOptionClick = (option: Option) => {
     onOptionSelected(option);
-    setSearchTerm(option.label);
+    setValue(option.label);
     setShowOptions(false);
   };
 
   return (
     <div>
        <TextField
-        label="Search"
-        id="search"
-        name="search"
-        placeholder="Enter search query..."
-        value={searchTerm}
+        label={label}
+        id={id}
+        name={name}
+        placeholder={placeholder}
+        value={value}
         onChange={handleChange}
-        className="flex-grow"
-        onBlur={() => setShowOptions(false)}
-        onFocus={() => setShowOptions(true)}
+        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+        onFocus={() => { setShowOptions(true)}}
       />
       {showOptions && (
         <ul className="options">
-          {filteredOptions.map((option) => (
+          {options.map((option) => (
             <li key={option.value.toString()} onClick={() => handleOptionClick(option)} className="option">
               {option.label}
             </li>

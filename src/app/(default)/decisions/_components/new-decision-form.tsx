@@ -8,9 +8,9 @@ import { type Program } from '~/app/_models/Program';
 import { TextField } from '~/app/_components/text-field';
 import SearchableDropdown from './searchable-dropdown';
 import ImageUpload from '~/app/_components/image-upload';
-import { getServerAuthSession } from '~/server/auth';
 import { genHeadlessUserId } from '~/app/_util/user';
-import { College } from '~/app/_models/College';
+import { type College } from '~/app/_models/College';
+import { getSession } from 'next-auth/react';
 
 interface DecisionInput {
     programId: number;
@@ -22,10 +22,10 @@ interface DecisionInput {
 }
 
 interface StatsInput {
-    gpa: number;
-    greVerbal: number;
-    greWritten: number;
-    degreeType: DegreeType;
+    gpa?: number;
+    greVerbal?: number;
+    greWritten?: number;
+    degreeType?: DegreeType;
 }
 
 interface VerificationInput {
@@ -37,14 +37,18 @@ const NewDecisionForm: React.FC = () => {
   const [formState, setFormState] = useState({
     programId: 0,
     collegeId: 0,
-    status: Status.REJECTED,
+    status: undefined,
     gpa: '',
     greVerbal: '',
     greWritten: '',
-    degreeType: DegreeType.BA, // Default or use a selection
+    statsDegreeType: undefined,
     verified: false,
     imgUrl: '',
   });
+  const [programDegreeType, setProgramDegreeType] = useState<string>();
+  const [selectedCollgeId, setSelectedCollegeId] = useState<number>();
+  const [programSearch, setProgramSearch] = useState('');
+  const [collegeSearch, setCollegeSearch] = useState('');
   const [programs, setPrograms] = useState<Program[]>([]);
   const [colleges, setColleges] = useState<College[]>([]);
 
@@ -54,13 +58,20 @@ const NewDecisionForm: React.FC = () => {
     },
   });
 
-  const { data: programData } = api.program.list.useQuery({});
+  const { data: programData } = api.program.list.useQuery({ searchString: programSearch, collegeId: selectedCollgeId, degreeType: programDegreeType}, { enabled: !!programSearch });
+  const { data: collegeData } = api.college.list.useQuery({ searchString: collegeSearch }, { enabled: !!collegeSearch });
 
   useEffect(() => {
     if (programData) {
       setPrograms(programData.programs);
     }
   }, [programData]);
+
+  useEffect(() => {
+    if (collegeData) {
+      setColleges(collegeData.colleges);
+    }
+  }, [collegeData]);
 
   const handleProgramSelected = (option: { label: string; value: string | number }) => {
     setFormState(prev => ({
@@ -70,6 +81,7 @@ const NewDecisionForm: React.FC = () => {
   };
 
   const handleCollegeSelected = (option: { label: string; value: string | number }) => {
+    setSelectedCollegeId(Number(option.value));
     setFormState(prev => ({
       ...prev,
       collegeId: Number(option.value),
@@ -98,18 +110,18 @@ const NewDecisionForm: React.FC = () => {
         };
 
         const statsInput: StatsInput = {
-            gpa: parseFloat(formState.gpa),
-            greVerbal: parseInt(formState.greVerbal, 10),
-            greWritten: parseInt(formState.greWritten, 10),
-            degreeType: formState.degreeType,
-        };
+          gpa: parseFloat(formState.gpa),
+          greVerbal: parseInt(formState.greVerbal, 10),
+          greWritten: parseInt(formState.greWritten, 10),
+          degreeType: formState.statsDegreeType,
+      };
 
         try {
 
             const addVerificationMutation = api.verificationRouter.add.useMutation();
             const addStatsMutation = api.statsRouter.add.useMutation();
 
-            const session = await getServerAuthSession();
+            const session = await getSession();
 
             const statsId = addStatsMutation.mutate(statsInput);
             const verificationId = addVerificationMutation.mutate(verificationInput);
@@ -131,25 +143,58 @@ const NewDecisionForm: React.FC = () => {
     }
   };
 
+  const handleProgramSearchChange = (searchTerm: string) => { setProgramSearch(searchTerm); };
+  const handleCollegeSearchChange = (searchTerm: string) => { setCollegeSearch(searchTerm); };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <SearchableDropdown
-        options={programs.map(program => {return {label: program.name, value: program.id}})}
-        onOptionSelected={handleProgramSelected}
-      />
-      <SearchableDropdown
-        options={colleges.map(college => {return {label: college.name, value: college.id}})}
+        label='Institution'
+        placeholder=''
+        id=''
+        name=''
+        options={collegeData?.colleges.map(c => {return {label: c.name, value: c.id}}) ?? []}
         onOptionSelected={handleCollegeSelected}
+        onSearch={handleCollegeSearchChange}
+
+        />
+
+      <div>
+        <label htmlFor="degreeType" className="block  font-bold">Degree</label>
+        <select
+          id="degree"
+          name="programDegreeType"
+          value={programDegreeType}
+          onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+            const { value } = e.target;
+            setProgramDegreeType(value);
+          }}
+          className='block w-full py-1 bg-secondary focus-ring border border-gray-300 rounded-md shadow-sm p-2'
+        >
+          {Object.values(DegreeType).map(status => (
+            <option key={status} value={status}>{status}</option>
+          ))}
+        </select>
+      </div>
+
+      <SearchableDropdown
+        label='Program'
+        placeholder=''
+        id=''
+        name=''
+        options={programData?.programs.map(p => {return {label: p.name, value: p.id}}) ?? []}
+        onOptionSelected={handleProgramSelected}
+        onSearch={handleProgramSearchChange}
       />
 
       <div>
-        <label htmlFor="status" className="block text-sm font-medium text-gray-700">Status</label>
+        <label htmlFor="status" className="block  font-bold">Status</label>
         <select
           id="status"
           name="status"
           value={formState.status}
           onChange={handleChange}
-          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+          className='block w-full py-1 bg-secondary focus-ring border border-gray-300 rounded-md shadow-sm p-2'
         >
           {Object.values(Status).map(status => (
             <option key={status} value={status}>{status}</option>
@@ -188,6 +233,21 @@ const NewDecisionForm: React.FC = () => {
           onChange={handleChange}
           className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
         />
+
+      <div>
+        <label htmlFor="degreeType" className="block  font-bold">Degree</label>
+        <select
+          id="statsDegreeType"
+          name="statsDegreeType"
+          value={formState.statsDegreeType}
+          onChange={handleChange}
+          className='block w-full py-1 bg-secondary focus-ring border border-gray-300 rounded-md shadow-sm p-2'
+        >
+          {Object.values(DegreeType).map(status => (
+            <option key={status} value={status}>{status}</option>
+          ))}
+        </select>
+      </div>
 
       <ImageUpload onSuccess={handleImageUploadSuccess} />
 
