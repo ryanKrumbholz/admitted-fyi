@@ -9,17 +9,17 @@ export default async function DefaultLayout({
 }: {
   children: ReactNode
 }) {
-  // const session = await getServerAuthSession()
+  const session = await getServerAuthSession()
 
   return (
-    // <AuthProvider session={session}>
+    <AuthProvider session={session}>
       <div className="max-w-3xl px-6 mx-auto">
-        {/* <Header /> */}
+        <Header />
         {children}
         <div className="py-20">
-          {/* <Footer /> */}
+          <Footer />
         </div>
       </div>
-    // </AuthProvider>
+    </AuthProvider>
   )
 }

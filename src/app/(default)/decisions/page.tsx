@@ -1,5 +1,6 @@
 import { api } from '~/trpc/server';
 import { Pagination } from '../../_components/pagination';
+import SearchBar from '~/app/_components/search-bar';
 
 const DECISIONS_PER_PAGE = 20;
 
@@ -8,6 +9,7 @@ export default async function DecisionsPage() {
 
   return (
   <div className="container mx-auto">
+    <SearchBar/>
     <ul>
       {decisions.map((decision) => (
         <li>
