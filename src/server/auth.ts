@@ -5,7 +5,6 @@ import {
   type NextAuthOptions,
 } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
-import AppleProvider from 'next-auth/providers/apple'
 import { env } from '~/env.js'
 import { db } from '~/server/db'
 

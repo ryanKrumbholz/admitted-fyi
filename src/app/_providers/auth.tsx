@@ -13,12 +13,13 @@ export const AuthProvider = ({
 }) => {
   const isUser = !!session?.user
   useEffect(() => {
-    if (!isUser) void signIn()
+    // if (!isUser) void signIn()
   }, [isUser])
 
   if (isUser) {
     return <>{children}</>
   }
 
-  return null
+  // return null
+  return <>{children}</>
 }

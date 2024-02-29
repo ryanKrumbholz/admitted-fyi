@@ -35,11 +35,11 @@ export default async function ProfilePage({
     id: params.userId,
   })
 
-  const session = await getServerAuthSession()
+  // const session = await getServerAuthSession()
 
   if (!profile) return
 
-  const profileBelongsToUser = profile.id === session!.user.id
+  // const profileBelongsToUser = profile.id === session!.user.id
 
   return (
     <>
@@ -57,14 +57,14 @@ export default async function ProfilePage({
           </div>
         </div>
 
-        {profileBelongsToUser && (
+        {/* {profileBelongsToUser && (
           <EditProfileAction
             user={{
               name: profile.name!,
               title: profile.title,
             }}
           />
-        )}
+        )} */}
 
       </div>
     </>

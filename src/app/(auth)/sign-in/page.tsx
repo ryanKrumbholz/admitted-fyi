@@ -24,7 +24,6 @@ export default async function SignIn() {
           <SignInButtons providers={providers} />
         </div>
         <div className="-mt-4 md:mt-0 w-screen left-1/2 transform -translate-x-1/2 absolute sm:w-[434px] lg:w-[646px] xl:w-[862px] auth-footer">
-          {/* <Footer /> */}
         </div>
       </div>
     </main>

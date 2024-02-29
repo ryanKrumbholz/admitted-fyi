@@ -1,10 +1,10 @@
 import { TRPCError } from '@trpc/server'
-import { createTRPCRouter, protectedProcedure } from '../trpc'
+import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc'
 import { z } from 'zod'
 import { Status } from '@prisma/client'
 
 export const decisionRouter = createTRPCRouter({
-  feed: protectedProcedure
+  feed: publicProcedure
     .input(
       z
         .object({
