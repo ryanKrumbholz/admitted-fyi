@@ -69,11 +69,10 @@ model VerificationToken {
 }
 
 model College {
-  id        Int        @id @default(autoincrement())
-  name      String
-  url       String?
-  programs  Program[]
-  decisions Decision[]
+  id       Int       @id @default(autoincrement())
+  name     String
+  url      String?
+  programs Program[]
 }
 
 model Program {
@@ -98,8 +97,6 @@ model Decision {
   user           User         @relation(fields: [userId], references: [id])
   verification   Verification @relation(fields: [verificationId], references: [id])
   verificationId Int
-  college        College      @relation(fields: [collegeId], references: [id])
-  collegeId      Int
 }
 
 model Verification {
