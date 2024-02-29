@@ -70,7 +70,7 @@ model VerificationToken {
 model College {
   id       Int       @id @default(autoincrement())
   name     String
-  url  String?
+  url      String?
   programs Program[]
 }
 
@@ -78,11 +78,11 @@ model Program {
   id           Int            @id @default(autoincrement())
   collegeId    Int
   name         String
-  degreeType   String // Consider using an Enum for predefined values
+  degreeType   DegreeType
   department   String
   college      College        @relation(fields: [collegeId], references: [id])
   decisions    Decision[]
-  Verification Verification[]
+  Verifications Verification[]
 }
 
 model Decision {
@@ -121,4 +121,22 @@ enum Status {
   INTERVIEW
   ACCEPTED
   REJECTED
+}
+
+enum DegreeType {
+  BA // Bachelor of Arts
+  BS // Bachelor of Science
+  BFA // Bachelor of Fine Arts
+  MA // Master of Arts
+  MS // Master of Science
+  MBA // Master of Business Administration
+  MFA // Master of Fine Arts
+  PhD // Doctor of Philosophy
+  MD // Doctor of Medicine
+  JD // Juris Doctor
+  EdD // Doctor of Education
+  DDS // Doctor of Dental Surgery
+  DVM // Doctor of Veterinary Medicine
+  LLB // Bachelor of Laws
+  LLM // Master of Laws
 }
