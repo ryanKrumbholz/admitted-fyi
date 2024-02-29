@@ -60,20 +60,16 @@ export const decisionRouter = createTRPCRouter({
   add: publicProcedure
     .input(
       z.object({
-        userId: z.string().optional(),
+        userId: z.string(),
         programId: z.number().int(),
-        status: z.enum(['WAITLISTED', 'INTERVIEW', 'ACCEPTED', 'REJECTED']),
+        status: z.nativeEnum(Status),
+        verificationId: z.number().int(),
+        collegeId: z.number().int()
       }),
     )
     .mutation(async ({ ctx, input }) => {
       const decision = await ctx.db.decision.create({
-        data: {
-          ...input,
-          userId: "13",
-          verificationId: 1,
-          programId: 2,
-          collegeId: 1,
-        }
+        data: input
       })
 
       return decision

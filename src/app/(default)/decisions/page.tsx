@@ -5,7 +5,7 @@ import SearchBar from '~/app/_components/search-bar';
 const DECISIONS_PER_PAGE = 20;
 
 export default async function DecisionsPage() {
-  const {decisions} = await api.decision.feed.query();
+  const {decisions, decisionCount} = await api.decision.feed.query();
 
   return (
   <div className="container mx-auto">
