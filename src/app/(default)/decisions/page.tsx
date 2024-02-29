@@ -1,17 +1,41 @@
-import { api } from '~/trpc/server';
+"use client"
+
+import React, { useState } from 'react';
 import { Pagination } from '../../_components/pagination';
-import SearchBar from '~/app/_components/search-bar';
+import Filters from './_components/filter-bar';
+import SearchBar from './_components/search-bar';
+import { api } from '~/trpc/react'
 
 const DECISIONS_PER_PAGE = 20;
 
-export default async function DecisionsPage() {
-  const {decisions, decisionCount} = await api.decision.feed.query();
+interface DecisionData {
+  program : {
+    name: string,
+    college: {
+      name: string
+    }
+  }
+  date: Date
+}
+
+export default function DecisionsPage() {
+  const [decisions, setDecisions] = useState([]);
+  const [pageNumber, setPageNumber] = useState(0);
+
+  const handleSearch = async (query: string) => {
+    const res = api.decision.feed.useQuery({searchString: query});
+    if (res.data?.decisions) {
+      setDecisions(decisions);
+      setPageNumber(pageNumber+1);
+    }
+  };
 
   return (
   <div className="container mx-auto">
-    <SearchBar/>
+    <SearchBar onSearch={(query) => handleSearch(query)}/>
+    <Filters/>
     <ul>
-      {decisions.map((decision) => (
+      {decisions.map((decision: DecisionData) => (
         <li>
           <a href="#" className="block max-w-sm p-6 bg-white  dark:bg-gray-800">
 
@@ -21,7 +45,7 @@ export default async function DecisionsPage() {
         </li>
         ))} 
     </ul>
-    <Pagination itemCount={20} itemsPerPage={DECISIONS_PER_PAGE} currentPageNumber={0}/>
+    <Pagination itemCount={20} itemsPerPage={DECISIONS_PER_PAGE} currentPageNumber={pageNumber}/>
   </div>
 );
 }

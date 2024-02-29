@@ -1,0 +1,7 @@
+export enum Status {
+    WAITLISTED = 'WAITLISTED',
+    INTERVIEW = 'INTERVIEW',
+    ACCEPTED = 'ACCEPTED',
+    REJECTED = 'REJECTED',
+  }
+  

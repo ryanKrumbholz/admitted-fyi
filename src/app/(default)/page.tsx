@@ -1,9 +1,7 @@
-import SearchBar from "../_components/search-bar";
+import DecisionsPage from "./decisions/page";
 
 export default async function Index() {
 
 return (
-  <div>
-    <SearchBar/>
-  </div>
+  <DecisionsPage/>
 )}

@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server'
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc'
 import { z } from 'zod'
-import { Status, College } from '@prisma/client';
+import { Status } from '@prisma/client';
 
 export const decisionRouter = createTRPCRouter({
   feed: publicProcedure
@@ -13,16 +13,31 @@ export const decisionRouter = createTRPCRouter({
           userId: z.string().optional(),
           programId: z.number().optional(),
           status: z.nativeEnum(Status).optional(),
+          searchString: z.string().optional(),
         })
         .optional(),
     )
     .query(async ({ ctx, input }) => {
-      const { take = 50, skip, userId, programId, status } = input ?? {}
+      const { take = 50, skip, userId, programId, status, searchString } = input ?? {}
 
       const where = {
         userId,
         programId, 
         status,
+        OR: searchString ? [
+          { program: { name: { contains: searchString, mode: 'insensitive' } } },
+          { program: { college: { name: { contains: searchString, mode: 'insensitive' } } } },
+        ] : undefined,
+      };
+
+      if (userId) {
+        where.userId = userId;
+      }
+      if (programId) {
+        where.programId = programId;
+      }
+      if (status) {
+        where.status = status;
       }
 
       const decisions = await ctx.db.decision.findMany({
