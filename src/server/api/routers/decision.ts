@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server'
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc'
 import { z } from 'zod'
-import { Status, Decision } from '@prisma/client'
+import { Status, College } from '@prisma/client';
 
 export const decisionRouter = createTRPCRouter({
   feed: publicProcedure
@@ -21,7 +21,7 @@ export const decisionRouter = createTRPCRouter({
 
       const where = {
         userId,
-        programId,
+        programId, 
         status,
       }
 
@@ -40,8 +40,12 @@ export const decisionRouter = createTRPCRouter({
               image: true,
             },
           },
-          program: true,
-          verification: true,
+          program: {
+            include: {
+              college: true, // Accesses collegeName
+            },
+          },
+          verification: true
         },
       })
 
@@ -65,7 +69,10 @@ export const decisionRouter = createTRPCRouter({
       const decision = await ctx.db.decision.create({
         data: {
           ...input,
-          verificationId: 1234
+          userId: "13",
+          verificationId: 1,
+          programId: 2,
+          collegeId: 1,
         }
       })
 

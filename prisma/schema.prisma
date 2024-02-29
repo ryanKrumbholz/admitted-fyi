@@ -57,7 +57,7 @@ model User {
   userPreferences  UserPreference[]
   decisions        Decision[]
   verifications    Verification[]
-  programWatchList Program[]
+  programWatchList Program[]        @relation("ProgramWatchList") // Adjusted for many-to-many
 }
 
 model VerificationToken {
@@ -85,21 +85,20 @@ model Program {
   college       College        @relation(fields: [collegeId], references: [id])
   decisions     Decision[]
   verifications Verification[]
-  user          User?          @relation(fields: [userId], references: [id])
-  userId        String?
+  watchers      User[]         @relation("ProgramWatchList") // Adjusted for many-to-many
 }
 
 model Decision {
   id             Int          @id @default(autoincrement())
-  userId         String?
+  userId         String
   programId      Int
   status         Status
   date           DateTime     @default(now())
   program        Program      @relation(fields: [programId], references: [id])
-  college        College      @relation(fields: [collegeId], references: [id])
-  user           User?        @relation(fields: [userId], references: [id])
+  user           User         @relation(fields: [userId], references: [id])
   verification   Verification @relation(fields: [verificationId], references: [id])
   verificationId Int
+  college        College      @relation(fields: [collegeId], references: [id])
   collegeId      Int
 }
 
