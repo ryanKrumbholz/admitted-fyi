@@ -57,10 +57,10 @@ export const decisionRouter = createTRPCRouter({
           },
           program: {
             include: {
-              college: true, // Accesses collegeName
+              college: true
             },
           },
-          verification: true
+          verification: true,
         },
       })
 
