@@ -46,17 +46,18 @@ model Session {
 }
 
 model User {
-  id             String           @id @default(cuid())
-  name           String?
-  email          String?          @unique
-  emailVerified  DateTime?
-  image          String?
-  title          String?
-  sessions       Session[]
-  Account        Account[]
-  UserPreference UserPreference[]
-  Decision       Decision[]
-  Verification   Verification[]
+  id               String           @id @default(cuid())
+  name             String?
+  email            String?          @unique
+  emailVerified    DateTime?
+  image            String?
+  title            String?
+  sessions         Session[]
+  Account          Account[]
+  userPreferences  UserPreference[]
+  decisions        Decision[]
+  verifications    Verification[]
+  programWatchList Program[]
 }
 
 model VerificationToken {
@@ -68,21 +69,24 @@ model VerificationToken {
 }
 
 model College {
-  id       Int       @id @default(autoincrement())
-  name     String
-  url      String?
-  programs Program[]
+  id        Int        @id @default(autoincrement())
+  name      String
+  url       String?
+  programs  Program[]
+  decisions Decision[]
 }
 
 model Program {
-  id           Int            @id @default(autoincrement())
-  collegeId    Int
-  name         String
-  degreeType   DegreeType
-  department   String
-  college      College        @relation(fields: [collegeId], references: [id])
-  decisions    Decision[]
-  Verifications Verification[]
+  id            Int            @id @default(autoincrement())
+  collegeId     Int
+  name          String
+  degreeType    DegreeType
+  department    String
+  college       College        @relation(fields: [collegeId], references: [id])
+  decisions     Decision[]
+  verifications Verification[]
+  user          User?          @relation(fields: [userId], references: [id])
+  userId        String?
 }
 
 model Decision {
@@ -92,9 +96,11 @@ model Decision {
   status         Status
   date           DateTime     @default(now())
   program        Program      @relation(fields: [programId], references: [id])
+  college        College      @relation(fields: [collegeId], references: [id])
   user           User?        @relation(fields: [userId], references: [id])
   verification   Verification @relation(fields: [verificationId], references: [id])
   verificationId Int
+  collegeId      Int
 }
 
 model Verification {
@@ -105,7 +111,7 @@ model Verification {
   program   Program    @relation(fields: [programId], references: [id])
   userId    String?
   programId Int
-  Decision  Decision[]
+  decisions Decision[]
 }
 
 model UserPreference {

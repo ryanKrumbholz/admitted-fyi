@@ -19,6 +19,10 @@
 .DS_Store
 *.pem
 
+# prisma helpers
+/prisma/seed.js
+/prisma/us_universities.tsv
+
 # debug
 npm-debug.log*
 yarn-debug.log*
