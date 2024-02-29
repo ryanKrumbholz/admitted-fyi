@@ -18,7 +18,6 @@ export const userRouter = createTRPCRouter({
           id: true,
           name: true,
           image: true,
-          title: true,
         },
       })
 
@@ -35,7 +34,6 @@ export const userRouter = createTRPCRouter({
     .input(
       z.object({
         name: z.string().min(1),
-        title: z.string().nullish(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -43,7 +41,6 @@ export const userRouter = createTRPCRouter({
         where: { id: ctx.session.user.id },
         data: {
           name: input.name,
-          title: input.title,
         },
       })
 

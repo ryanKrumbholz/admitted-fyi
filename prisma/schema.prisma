@@ -14,7 +14,7 @@ datasource db {
 
 model Account {
   id                       String  @id @default(cuid())
-  userId                   String
+  userId                   String  @unique
   type                     String
   provider                 String
   providerAccountId        String
@@ -51,63 +51,55 @@ model User {
   email            String?          @unique
   emailVerified    DateTime?
   image            String?
-  title            String?
   sessions         Session[]
-  Account          Account[]
+  Account          Account?
   userPreferences  UserPreference[]
   decisions        Decision[]
-  verifications    Verification[]
+  resident         Boolean
   programWatchList Program[]        @relation("ProgramWatchList") // Adjusted for many-to-many
 }
 
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
-}
-
 model College {
-  id       Int       @id @default(autoincrement())
-  name     String
-  url      String?
-  programs Program[]
+  id        Int        @id @default(autoincrement())
+  name      String
+  url       String?
+  programs  Program[]
+  decisions Decision[]
 }
 
 model Program {
-  id            Int            @id @default(autoincrement())
-  collegeId     Int
-  name          String
-  degreeType    DegreeType
-  department    String
-  college       College        @relation(fields: [collegeId], references: [id])
-  decisions     Decision[]
-  verifications Verification[]
-  watchers      User[]         @relation("ProgramWatchList") // Adjusted for many-to-many
+  id         Int        @id @default(autoincrement())
+  collegeId  Int
+  name       String
+  department String?
+  degreeType DegreeType
+  college    College    @relation(fields: [collegeId], references: [id])
+  decisions  Decision[]
+  watchers   User[]     @relation("ProgramWatchList")
 }
 
 model Decision {
-  id             Int          @id @default(autoincrement())
+  id             Int      @id @default(autoincrement())
   userId         String
+  collegeId      Int
   programId      Int
   status         Status
-  date           DateTime     @default(now())
-  program        Program      @relation(fields: [programId], references: [id])
-  user           User         @relation(fields: [userId], references: [id])
-  verification   Verification @relation(fields: [verificationId], references: [id])
-  verificationId Int
+  date           DateTime @default(now())
+  verificationId String   @unique
+  statsId        String   @unique
+
+  college      College      @relation(fields: [collegeId], references: [id])
+  user         User         @relation(fields: [userId], references: [id])
+  program      Program      @relation(fields: [programId], references: [id])
+  stats        Stats        @relation(fields: [statsId], references: [id])
+  verification Verification @relation(fields: [verificationId], references: [id])
 }
 
 model Verification {
-  id        Int        @id @default(autoincrement())
+  id        String    @id @default(cuid())
   verified  Boolean
   imgUrl    String
-  user      User?      @relation(fields: [userId], references: [id])
-  program   Program    @relation(fields: [programId], references: [id])
-  userId    String?
-  programId Int
-  decisions Decision[]
+  decisions Decision?
 }
 
 model UserPreference {
@@ -116,6 +108,15 @@ model UserPreference {
   preferenceType  String
   preferenceValue String
   user            User   @relation(fields: [userId], references: [id])
+}
+
+model Stats {
+  id         String     @id @default(cuid())
+  gpa        Float
+  greVerbal  Int
+  greWritten Int
+  degreeType DegreeType
+  decision   Decision?
 }
 
 enum Status {

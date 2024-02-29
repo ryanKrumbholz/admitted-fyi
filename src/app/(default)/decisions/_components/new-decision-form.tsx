@@ -6,13 +6,15 @@ import { api } from '~/trpc/react'
 import SearchBar from './search-bar';
 import { DegreeType } from '~/app/_models/DegreeType';
 import SearchableDropdown from './searchable-dropdown';
+import { Program } from '~/app/_models/Program';
 
 interface DecisionInput {
     programId: number
     collegeId: number
     status: Status
-    verificationId: number
+    verificationId: string
     userId: string
+    statsId: string
 }
 
 const NewDecisionForm: React.FC = () => {
@@ -21,7 +23,7 @@ const NewDecisionForm: React.FC = () => {
     status: undefined,
     collegeId: undefined,
   });
-  const [programs, setPrograms] = useState<{ id: number; collegeId: number; name: string; degreeType: string; department: string; }[]>([]);
+  const [programs, setPrograms] = useState<Program[]>([]);
 
   const addDecisionMutation = api.decision.add.useMutation({
     onSuccess: () => {
@@ -48,10 +50,11 @@ const NewDecisionForm: React.FC = () => {
     if (formState.programId && formState.status && formState.collegeId) {
         const input: DecisionInput = {
             userId: "1234",
-            verificationId: 1234,
+            statsId: "1234",
+            verificationId: "1234",
             programId: formState.programId,
             status: formState.status,
-            collegeId: formState.collegeId
+            collegeId: formState.collegeId,
           };
         addDecisionMutation.mutate(input);
     }

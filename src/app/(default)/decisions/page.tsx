@@ -5,23 +5,13 @@ import { Pagination } from '../../_components/pagination';
 import Filters from './_components/filter-bar';
 import SearchBar from './_components/search-bar';
 import { api } from '~/trpc/react'
-import { type Status } from '~/app/_models/Status';
+import { type Decision } from '~/app/_models/Decision';
+import DecisionCard from './_components/decision-card';
 
 const DECISIONS_PER_PAGE = 20;
 
-interface DecisionData {
-  program : {
-    name: string,
-    college: {
-      name: string
-    }
-  }
-  date: Date
-  status: `${Status}`
-}
-
 export default function DecisionsPage() {
-  const [decisions, setDecisions] = useState<DecisionData[]>([]);
+  const [decisions, setDecisions] = useState<Decision[]>([]);
   const [pageNumber, setPageNumber] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -50,14 +40,9 @@ export default function DecisionsPage() {
     <SearchBar onSearch={(query) => handleSearch(query)}/>
     <Filters/>
     <ul>
-      {decisions.map((decision: DecisionData) => (
+      {decisions.map((decision: Decision) => (
         <li>
-          <a href="#" className="block max-w-sm p-6 bg-white  dark:bg-gray-800">
-
-            <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{`${decision.program.name}, ${decision.program.college.name}`}</h5>
-            <p className="font-normal text-gray-700 dark:text-gray-400">{decision.date.toLocaleDateString()}</p>
-            <p className="font-normal text-gray-700 dark:text-gray-400">{decision.status}</p>
-          </a>
+          <DecisionCard decision={decision}/>
         </li>
         ))} 
     </ul>

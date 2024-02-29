@@ -27,6 +27,9 @@ export const programRouter = createTRPCRouter({
         take,
         skip,
         where,
+        include: {
+          college: true
+        },
         orderBy: { name: 'asc' },
       });
 

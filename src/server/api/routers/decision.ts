@@ -2,6 +2,7 @@ import { TRPCError } from '@trpc/server'
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc'
 import { z } from 'zod'
 import { Status } from '@prisma/client';
+import { Stats } from '../../../app/_models/Stats';
 
 export const decisionRouter = createTRPCRouter({
   feed: publicProcedure
@@ -48,16 +49,9 @@ export const decisionRouter = createTRPCRouter({
           date: 'desc',
         },
         include: {
-          user: {
-            select: {
-              id: true,
-              name: true,
-              image: true,
-            },
-          },
           program: {
             include: {
-              college: true
+              college: true, // Ensure college data is included for the program
             },
           },
           verification: true,
@@ -78,8 +72,9 @@ export const decisionRouter = createTRPCRouter({
         userId: z.string(),
         programId: z.number().int(),
         status: z.nativeEnum(Status),
-        verificationId: z.number().int(),
-        collegeId: z.number().int()
+        verificationId: z.string(),
+        collegeId: z.number().int(),
+        statsId: z.string()
       }),
     )
     .mutation(async ({ ctx, input }) => {

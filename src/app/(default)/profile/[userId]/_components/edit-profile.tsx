@@ -9,7 +9,6 @@ import { api } from '~/trpc/react'
 
 type EditFormData = {
   name: string
-  title: string | null
 }
 
 const EditProfileDialog = ({
@@ -25,7 +24,6 @@ const EditProfileDialog = ({
   const { register, handleSubmit, reset } = useForm<EditFormData>({
     defaultValues: {
       name: user.name,
-      title: user.title,
     },
   })
   const router = useRouter()
@@ -47,7 +45,6 @@ const EditProfileDialog = ({
     editUserMutation.mutate(
       {
         name: data.name,
-        title: data.title,
       },
       {
         onSuccess: () => handleDialogClose(),

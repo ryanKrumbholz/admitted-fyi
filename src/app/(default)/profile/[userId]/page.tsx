@@ -49,11 +49,7 @@ export default async function ProfilePage({
             <h1 className="bg-primary text-2xl font-semibold tracking-tight md:text-3xl">
               {profile.name}
             </h1>
-            {profile.title && (
-              <p className="text-lg tracking-tight text-secondary">
-                {profile.title}
-              </p>
-            )}
+
           </div>
         </div>
 
