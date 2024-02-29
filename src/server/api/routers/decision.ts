@@ -1,13 +1,13 @@
 import { TRPCError } from '@trpc/server'
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc'
 import { z } from 'zod'
-import { Status } from '@prisma/client'
+import { Status, Decision } from '@prisma/client'
 
 export const decisionRouter = createTRPCRouter({
   feed: publicProcedure
     .input(
       z
-        .object({
+        .object({ 
           take: z.number().min(1).max(50).optional(),
           skip: z.number().min(0).optional(),
           userId: z.string().optional(),
@@ -53,35 +53,24 @@ export const decisionRouter = createTRPCRouter({
       }
     }),
 
-  // add: protectedProcedure
-  //   .input(
-  //     z.object({
-  //       programId: z.number(),
-  //       status: z.nativeEnum(Status),
-  //       content: z.string().min(1),
-  //     }),
-  //   )
-  //   .mutation(async ({ ctx, input }) => {
-  //     const { programId, status, content } = input
+  add: publicProcedure
+    .input(
+      z.object({
+        userId: z.string().optional(),
+        programId: z.number().int(),
+        status: z.enum(['WAITLISTED', 'INTERVIEW', 'ACCEPTED', 'REJECTED']),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const decision = await ctx.db.decision.create({
+        data: {
+          ...input,
+          verificationId: 1234
+        }
+      })
 
-  //     const decision = await ctx.db.decision.create({
-  //       data: {
-  //         user: {
-  //           connect: {
-  //             id: ctx.session.user.id,
-  //           },
-  //         },
-  //         program: {
-  //           connect: {
-  //             id: programId,
-  //           },
-  //         },
-  //         status,
-  //       },
-  //     })
-
-  //     return decision
-  //   }),
+      return decision
+    }),
 
   edit: protectedProcedure
     .input(
