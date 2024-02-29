@@ -70,7 +70,6 @@ model VerificationToken {
 model College {
   id       Int       @id @default(autoincrement())
   name     String
-  location String
   website  String?
   programs Program[]
 }
