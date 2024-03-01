@@ -11,8 +11,8 @@ const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
     });
 
     return (
-        <div className="flex max-w-full p-3 bg-base border-l-4 dark:bg-surface dark:border-lavender justify-between mb-7">
-            <div>
+        <div className="flex min-w-full min-h-56 p-3 bg-base border-l-4 dark:bg-surface dark:border-lavender justify-between mb-7">
+            <div className="mr-auto">
                 <h5 className="mb-2 text-2xl font-bold tracking-tight text-text dark:text-text">
                     {`${decision.program.name}, ${decision.program.college.name}`}
                 </h5>
@@ -35,7 +35,7 @@ const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
                 )}
             </div>
             {decision.verificationId && decision.verification.verified && (
-                <div className="flex items-center justify-center w-10 h-10 rounded-full mt-auto">
+                <div className="flex items-center justify-center w-10 rounded-full mt-auto">
                 <p className="mr-2">verified</p>
                 <div className="flex items-center justify-center w-10 h-10 rounded-full">
                     <svg className="w-8 h-8 text-lavender" fill="none" viewBox="0 0 48 48" stroke="currentColor">

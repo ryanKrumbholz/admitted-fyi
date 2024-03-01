@@ -47,9 +47,9 @@ export default function DecisionsPage() {
         <SearchBar onSearch={handleSearch}/>
         <Filters/>
       </div>
-      <ul>
+      <ul className='w-full max-w-2xl'>
         {data?.decisions.map((decision) => (
-          <li key={decision.id}>
+          <li key={decision.id} className='w-fill'>
             <DecisionCard decision={decision}/>
           </li>
         ))} 
