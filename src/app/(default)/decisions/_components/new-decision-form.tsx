@@ -217,6 +217,7 @@ const NewDecisionForm: React.FC = () => {
           label='GPA (4.0)'
           type="number"
           step="0.01"
+          max="4.0"
           id="gpa"
           name="gpa"
           value={formState.gpa}
@@ -230,6 +231,8 @@ const NewDecisionForm: React.FC = () => {
           type="number"
           id="greVerbal"
           name="greVerbal"
+          min="130"
+          max="170"
           value={formState.greVerbal}
           onChange={handleChange}
           className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
@@ -240,6 +243,9 @@ const NewDecisionForm: React.FC = () => {
           type="number"
           id="greWritten"
           name="greWritten"
+          min="0"
+          max="6"
+          step="0.5"
           value={formState.greWritten}
           onChange={handleChange}
           className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"

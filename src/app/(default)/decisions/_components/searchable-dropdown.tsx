@@ -33,11 +33,11 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
 
   useEffect(() => {
     onSearch(searchTerm);
-    setValue(searchTerm);
   }, [searchTerm, onSearch]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
+    setValue(e.target.value);
     setShowOptions(true);
   };
 
@@ -56,9 +56,9 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
         placeholder={placeholder}
         value={value}
         onChange={handleChange}
-        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
         onFocus={() => { setShowOptions(true)}}
         disabled={disabled}
+        className={`mt-1 block w-full border rounded-md shadow-sm p-2 ${disabled ? 'bg-gray-700 text-gray-500 border-gray-200' : 'border-gray-300'}`}
       />
       {showOptions && (
         <ul className="options">
