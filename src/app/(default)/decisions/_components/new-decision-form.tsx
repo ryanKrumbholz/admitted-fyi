@@ -156,7 +156,6 @@ const NewDecisionForm: React.FC = () => {
         options={collegeData?.colleges.map(c => {return {label: c.name, value: c.id}}) ?? []}
         onOptionSelected={handleCollegeSelected}
         onSearch={handleCollegeSearchChange}
-
         />
 
       <div>
