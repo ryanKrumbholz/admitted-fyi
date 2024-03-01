@@ -9,31 +9,10 @@ import { TextField } from '~/app/_components/text-field';
 import SearchableDropdown from './searchable-dropdown';
 import ImageUpload from '~/app/_components/image-upload';
 import { type College } from '~/app/_models/College';
-import { getSession } from 'next-auth/react';
-import { genHeadlessUserId } from '~/app/_util/user';
-import { Stats } from '@prisma/client';
-import { Verification } from '@prisma/client';
-
-interface DecisionInput {
-    programId: number;
-    status: Status;
-    collegeId: number;
-    verificationId: string;
-    userId: string;
-    statsId: string;
-}
-
-interface StatsInput {
-    gpa?: number;
-    greVerbal?: number;
-    greWritten?: number;
-    degreeType?: DegreeType;
-}
-
-interface VerificationInput {
-    verified: boolean;
-    imgUrl: string;
-}
+import { useRouter } from 'next/navigation';
+import { type VerificationInput } from '~/server/model/verification-input';
+import { type StatsInput } from '~/server/model/stats-input';
+import { type DecisionInput } from '~/server/model/decision-input';
 
 const NewDecisionForm: React.FC = () => {
   const [formState, setFormState] = useState({
@@ -53,14 +32,11 @@ const NewDecisionForm: React.FC = () => {
   const [collegeSearch, setCollegeSearch] = useState('');
   const [programs, setPrograms] = useState<Program[]>([]);
   const [colleges, setColleges] = useState<College[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const addDecisionMutation = api.decision.add.useMutation({
-    onSuccess: () => {
-        console.log("Decision added successfully");
-    },
-  });
-  const addVerificationMutation = api.verification.add.useMutation();
-  const addStatsMutation = api.stats.add.useMutation();
+  const router = useRouter();
+
+  const addDecisionMutation = api.decision.add.useMutation();
 
   const { data: programData } = api.program.list.useQuery({ searchString: programSearch, collegeId: selectedCollgeId, degreeType: programDegreeType}, { enabled: !!programSearch });
   const { data: collegeData } = api.college.list.useQuery({ searchString: collegeSearch }, { enabled: !!collegeSearch });
@@ -108,51 +84,50 @@ const NewDecisionForm: React.FC = () => {
     e.preventDefault();
 
     if (formState.programId && formState.status && formState.collegeId) {
-        const verificationInput: VerificationInput = {
-            verified: formState.verified,
-            imgUrl: formState.imgUrl,
-        };
+      const verificationInput: VerificationInput = {
+        verified: formState.verified,
+        imgUrl: formState.imgUrl,
+    };
 
-        const statsInput: StatsInput = {
-            gpa: parseFloat(formState.gpa),
-            greVerbal: parseInt(formState.greVerbal, 10),
-            greWritten: parseInt(formState.greWritten, 10),
-            degreeType: formState.statsDegreeType,
-        };
-
-        const session = await getSession();
-        const userId = session?.user ? session.user.id : genHeadlessUserId();
-
+    const statsInput: StatsInput = {
+        gpa: parseFloat(formState.gpa),
+        greVerbal: parseInt(formState.greVerbal, 10),
+        greWritten: parseInt(formState.greWritten, 10),
+        degreeType: formState.statsDegreeType,
+    };
         try {
-            // Using mutateAsync to wait for the mutation to complete and get the result
-            const statsResult: Stats = await addStatsMutation.mutateAsync(statsInput);
-            const verificationResult: Verification = await addVerificationMutation.mutateAsync(verificationInput);
-
-            // Assuming these results contain an ID or some identifier you need
-            const statsId = statsResult.id; // You'll need to adjust based on actual returned structure
-            const verificationId = verificationResult.id; // Adjust based on actual structure
+            setIsSubmitting(true);
+            const verificationInput: VerificationInput = {
+              verified: formState.verified,
+              imgUrl: formState.imgUrl,
+          };
+  
+          const statsInput: StatsInput = {
+              gpa: parseFloat(formState.gpa),
+              greVerbal: parseInt(formState.greVerbal, 10),
+              greWritten: parseInt(formState.greWritten, 10),
+              degreeType: formState.statsDegreeType,
+          };
 
             const decisionInput: DecisionInput = {
-                userId,
-                statsId,
-                verificationId,
+                statsInput: statsInput,
+                verificationInput: verificationInput,
                 programId: formState.programId,
                 status: formState.status,
                 collegeId: formState.collegeId,
             };
 
-            // You can now await this mutation as well and do something with the result
-            const decisionResult = await addDecisionMutation.mutateAsync(decisionInput);
-
-            // Handle success, e.g., showing a message or redirecting the user
-            console.log("Decision added successfully", decisionResult);
+            await addDecisionMutation.mutateAsync(decisionInput, {
+              onSuccess: (data) => {
+                router.push(data.redirectUrl);
+              }
+            });
         } catch (error) {
-            // Handle any errors that occur during the mutation
             console.error("An error occurred", error);
+            setIsSubmitting(false);
         }
     }
 };
-
 
   const handleProgramSearchChange = (searchTerm: string) => { setProgramSearch(searchTerm); };
   const handleCollegeSearchChange = (searchTerm: string) => { setCollegeSearch(searchTerm); };
@@ -268,7 +243,7 @@ const NewDecisionForm: React.FC = () => {
 
       {/* <ImageUpload onSuccess={handleImageUploadSuccess} /> */}
 
-      <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700">
+      <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700" disabled={isSubmitting}>
         Add Decision
       </button>
     </form>

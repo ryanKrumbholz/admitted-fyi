@@ -1,8 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 import { z } from 'zod';
-import { DegreeType } from '~/app/_models/DegreeType';
-import { Stats } from '@prisma/client';
+import { Stats, DegreeType } from '@prisma/client';
 
 export const statsRouter = createTRPCRouter({
   add: publicProcedure

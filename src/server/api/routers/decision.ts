@@ -1,8 +1,10 @@
 import { TRPCError } from '@trpc/server'
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc'
 import { z } from 'zod'
-import { Status } from '@prisma/client';
-import { Stats } from '../../../app/_models/Stats';
+import { Status, Stats, Verification, DegreeType } from '@prisma/client';
+import { api } from '~/trpc/server';
+import { getServerSession } from 'next-auth';
+import { genHeadlessUserId } from '~/app/_util/user';
 
 export const decisionRouter = createTRPCRouter({
   feed: publicProcedure
@@ -69,20 +71,50 @@ export const decisionRouter = createTRPCRouter({
   add: publicProcedure
     .input(
       z.object({
-        userId: z.string(),
         programId: z.number().int(),
         status: z.nativeEnum(Status),
-        verificationId: z.string(),
         collegeId: z.number().int(),
-        statsId: z.string()
+        verificationInput: z.object({
+          verified: z.boolean(),
+          imgUrl: z.string()
+        }),
+        statsInput:  z.object({
+            gpa: z.number().optional(),
+            greVerbal: z.number().optional(),
+            greWritten: z.number().optional(),
+            degreeType: z.nativeEnum(DegreeType).optional(),
+          
+        })
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const decision = await ctx.db.decision.create({
-        data: input
-      })
+      const {statsInput, verificationInput, collegeId, programId, status} = input;
 
-      return decision
+      const statsResult: Stats = await api.stats.add.mutate(statsInput);
+      const verificationResult: Verification = await api.verification.add.mutate(verificationInput);
+      const session = await getServerSession();
+
+      const verificationId = verificationResult.id;
+      const statsId = statsResult.id;
+      const userId = session?.user ? session.user.id : genHeadlessUserId();
+
+      const data = {
+        userId: userId,
+        statsId: statsId,
+        verificationId: verificationId,
+        programId: programId,
+        status: status,
+        collegeId: collegeId,
+      }
+
+      const decision = await ctx.db.decision.create({
+        data: data
+      });
+
+      return {
+        decision: decision,
+        redirectUrl: '/'
+      };
     }),
 
   edit: protectedProcedure
