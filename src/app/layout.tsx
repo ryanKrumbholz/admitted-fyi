@@ -28,7 +28,7 @@ const inter = localFont({
   ],
 })
 export const metadata = {
-  title: 'admitted.fyi',
+  title: 'Admitted.fyi',
 }
 
 export default async function RootLayout({

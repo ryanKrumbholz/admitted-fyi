@@ -65,7 +65,7 @@ model College {
   url       String?
   programs  Program[]
   decisions Decision[]
-  
+
   @@fulltext([name])
 }
 
@@ -83,7 +83,7 @@ model Program {
 }
 
 model Decision {
-  id             Int      @id @default(autoincrement())
+  id             String   @id @default(cuid())
   userId         String
   collegeId      Int
   programId      Int
@@ -93,16 +93,16 @@ model Decision {
   statsId        String   @unique
 
   college      College      @relation(fields: [collegeId], references: [id])
-  user         User?         @relation(fields: [userId], references: [id])
+  user         User?        @relation(fields: [userId], references: [id])
   program      Program      @relation(fields: [programId], references: [id])
   stats        Stats        @relation(fields: [statsId], references: [id])
   verification Verification @relation(fields: [verificationId], references: [id])
 }
 
 model Verification {
-  id        String    @id @default(cuid())
-  verified  Boolean
-  imgUrl    String
+  id       String    @id @default(cuid())
+  verified Boolean
+  imgUrl   String
   decision Decision?
 }
 
@@ -115,7 +115,7 @@ model UserPreference {
 }
 
 model Stats {
-  id         String     @id @default(cuid())
+  id         String      @id @default(cuid())
   gpa        Float?
   greVerbal  Int?
   greWritten Int?

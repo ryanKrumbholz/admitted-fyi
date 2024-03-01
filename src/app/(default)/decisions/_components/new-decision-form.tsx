@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation';
 import { type VerificationInput } from '~/server/model/verification-input';
 import { type StatsInput } from '~/server/model/stats-input';
 import { type DecisionInput } from '~/server/model/decision-input';
+import { Button } from '~/app/_components/button';
 
 const NewDecisionForm: React.FC = () => {
   const [formState, setFormState] = useState({
@@ -26,7 +27,7 @@ const NewDecisionForm: React.FC = () => {
     verified: false,
     imgUrl: '',
   });
-  const [programDegreeType, setProgramDegreeType] = useState<DegreeType>(DegreeType.BA);
+  const [programDegreeType, setProgramDegreeType] = useState<DegreeType>();
   const [selectedCollgeId, setSelectedCollegeId] = useState<number>(0);
   const [programSearch, setProgramSearch] = useState('');
   const [collegeSearch, setCollegeSearch] = useState('');
@@ -38,7 +39,7 @@ const NewDecisionForm: React.FC = () => {
 
   const addDecisionMutation = api.decision.add.useMutation();
 
-  const { data: programData } = api.program.list.useQuery({ searchString: programSearch, collegeId: selectedCollgeId, degreeType: programDegreeType}, { enabled: !!programSearch });
+  const { data: programData } = api.program.list.useQuery({ searchString: programSearch, collegeId: selectedCollgeId, degreeType: programDegreeType ?? DegreeType.BA}, { enabled: !!programSearch });
   const { data: collegeData } = api.college.list.useQuery({ searchString: collegeSearch }, { enabled: !!collegeSearch });
 
   useEffect(() => {
@@ -77,7 +78,11 @@ const NewDecisionForm: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormState(prevState => ({ ...prevState, [name]: value }));
+    if (!isNaN(+value)) {
+      setFormState(prevState => ({ ...prevState, [name]: Number(value) }));
+    } else {
+      setFormState(prevState => ({ ...prevState, [name]: value }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -126,124 +131,126 @@ const NewDecisionForm: React.FC = () => {
   const handleCollegeSearchChange = (searchTerm: string) => { setCollegeSearch(searchTerm); };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <SearchableDropdown
-        label='Institution'
-        placeholder=''
-        id=''
-        name=''
-        options={collegeData?.colleges.map(c => {return {label: c.name, value: c.id}}) ?? []}
-        onOptionSelected={handleCollegeSelected}
-        onSearch={handleCollegeSearchChange}
-        />
+   <form onSubmit={handleSubmit} className="container max-w-full space-y-4 bg-base text-mantle rounded-lg p-4">
+   <SearchableDropdown
+     label='Institution'
+     placeholder='Begin typing and select an institution...'
+     id='institution-dropdown'
+     name='institution'
+     options={collegeData?.colleges.map(c => ({ label: c.name, value: c.id })) ?? []}
+     onOptionSelected={handleCollegeSelected}
+     onSearch={handleCollegeSearchChange}
+   />
+ 
+   <div>
+     <label htmlFor="degreeType" className="block font-bold text-white">Degree</label>
+     <select
+       required={true}
+       id="degree"
+       name="programDegreeType"
+       value={programDegreeType}
+       onChange={(e) => setProgramDegreeType(e.target.value as DegreeType)}
+       className='block w-full py-1 bg-surface border-mantle rounded-md p-2 focus:ring-lavender focus:outline-none'
+       defaultValue={""}
+     >
+      <option value="" selected disabled hidden>Select degree type</option>
+       {Object.values(DegreeType).filter(degreeType => degreeType !== DegreeType.BA && degreeType !== DegreeType.BS).map(degreeType => (
+         <option key={degreeType} value={degreeType}>{degreeType}</option>
+       ))}
+     </select>
+   </div>
+ 
+   <SearchableDropdown
+     required={true}
+     label='Program'
+     placeholder='Begin typing and select a program...'
+     id='program-dropdown'
+     name='program'
+     options={programData?.programs.map(p => ({ label: p.name, value: p.id })) ?? []}
+     onOptionSelected={handleProgramSelected}
+     onSearch={handleProgramSearchChange}
+     disabled={!selectedCollgeId || !programDegreeType}
 
-      <div>
-        <label htmlFor="degreeType" className="block  font-bold">Degree</label>
-        <select
-          required={true}
-          id="degree"
-          name="programDegreeType"
-          value={programDegreeType}
-          onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-            const { value } = e.target;
-            setProgramDegreeType(value as DegreeType);
-          }}
-          className='block w-full py-1 bg-secondary focus-ring border border-gray-300 rounded-md shadow-sm p-2'
-        >
-          {Object.values(DegreeType).filter(degreeType => degreeType !== DegreeType.BA && degreeType !== DegreeType.BS).map(degreeType => (
-            <option key={degreeType} value={degreeType}>{degreeType}</option>
-          ))}
-        </select>
-      </div>
+   />
+ 
+   <div>
+     <label htmlFor="status" className="block font-bold text-white">Status</label>
+     <select
+       required={true}
+       id="status"
+       name="status"
+       value={formState.status}
+       onChange={handleChange}
+       className='block w-full py-1 bg-surface border-mantle rounded-md  p-2 focus:ring-lavender focus:outline-none'
+     >
+      <option value="" selected disabled hidden>Select status</option>
+       {Object.values(Status).map(status => (
+         <option key={status} value={status}>{status}</option>
+       ))}
+     </select>
+   </div>
+ 
+   <TextField
+     required={true}
+     label='GPA (4.0 scale)'
+     type="number"
+     step="0.01"
+     max="4.0"
+     id="gpa"
+     name="gpa"
+     value={formState.gpa}
+     onChange={handleChange}
+     className="w-full py-1 bg-surface border-mantle rounded-md p-2 focus:ring-lavender focus:outline-none"
+   />
+ 
+   <TextField
+     label='GRE Verbal (optional)'
+     type="number"
+     id="greVerbal"
+     name="greVerbal"
+     min="130"
+     max="170"
+     value={formState.greVerbal}
+     onChange={handleChange}
+     className="w-full py-1 bg-surface border-mantle rounded-md p-2 focus:ring-lavender focus:outline-none"
+   />
+ 
+   <TextField
+     label='GRE Written (optional)'
+     type="number"
+     id="greWritten"
+     name="greWritten"
+     min="0"
+     max="6"
+     step="0.5"
+     value={formState.greWritten}
+     onChange={handleChange}
+     className="w-full py-1 bg-surface border-mantle rounded-md p-2 focus:ring-lavender focus:outline-none"
+   />
 
-      <SearchableDropdown
-        required={true}
-        label='Program'
-        placeholder=''
-        id=''
-        name=''
-        options={programData?.programs.map(p => {return {label: p.name, value: p.id}}) ?? []}
-        onOptionSelected={handleProgramSelected}
-        onSearch={handleProgramSearchChange}
-        disabled={!selectedCollgeId || !programDegreeType}
-      />
+  <div>
+     <label htmlFor="statsDegreeType" className="block font-bold text-white">Degree Held (Optional)</label>
+     <select
+       id="statsDegreeType"
+       name="stat"
+       value={formState.statsDegreeType}
+       onChange={handleChange}
 
-      <div>
-        <label htmlFor="status" className="block  font-bold">Status</label>
-        <select
-          required={true}
-          id="status"
-          name="status"
-          value={formState.status}
-          onChange={handleChange}
-          className='block w-full py-1 bg-secondary focus-ring border border-gray-300 rounded-md shadow-sm p-2'
-        >
-          {Object.values(Status).map(status => (
-            <option key={status} value={status}>{status}</option>
-          ))}
-        </select>
-      </div>
+       className='block w-full py-1 bg-surface border-mantle rounded-md p-2 focus:ring-lavender focus:outline-none'
+     >
+      <option value="" selected disabled hidden>Select degree type</option>
+       {Object.values(DegreeType).filter(degreeType => degreeType !== DegreeType.BA && degreeType !== DegreeType.BS).map(degreeType => (
+         <option key={degreeType} value={degreeType}>{degreeType}</option>
+       ))}
+     </select>
+   </div>
 
-        <TextField
-          required={true}
-          label='GPA (4.0 scale)'
-          type="number"
-          step="0.01"
-          max="4.0"
-          id="gpa"
-          name="gpa"
-          value={formState.gpa}
-          onChange={handleChange}
-          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-        />
-
-
-        <TextField
-          label='GRE Verbal (optional)'
-          type="number"
-          id="greVerbal"
-          name="greVerbal"
-          min="130"
-          max="170"
-          value={formState.greVerbal}
-          onChange={handleChange}
-          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-        />
-
-        <TextField
-          label='GRE Written (optional)'
-          type="number"
-          id="greWritten"
-          name="greWritten"
-          min="0"
-          max="6"
-          step="0.5"
-          value={formState.greWritten}
-          onChange={handleChange}
-          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-        />
-
-      <div>
-        <label htmlFor="degreeType" className="block  font-bold">Degree</label>
-        <select
-          id="statsDegreeType"
-          name="statsDegreeType"
-          value={formState.statsDegreeType}
-          onChange={handleChange}
-          className='block w-full py-1 bg-secondary focus-ring border border-gray-300 rounded-md shadow-sm p-2'
-        >
-          {Object.values(DegreeType).map(status => (
-            <option key={status} value={status}>{status}</option>
-          ))}
-        </select>
-      </div>
-
-      {/* <ImageUpload onSuccess={handleImageUploadSuccess} /> */}
-
-      <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700" disabled={isSubmitting}>
-        Add Decision
-      </button>
-    </form>
+ 
+   <Button type="submit" className="" disabled={isSubmitting}>
+     Submit Decision
+   </Button>
+ </form>
+ 
   );
 };
 

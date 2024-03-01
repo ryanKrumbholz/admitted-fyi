@@ -11,7 +11,7 @@ const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
     });
 
     return (
-        <div className="flex max-w-full p-3 bg-base border-l dark:bg-surface dark:border-lavender justify-between">
+        <div className="flex max-w-full p-3 bg-base border-l-4 dark:bg-surface dark:border-lavender justify-between mb-7">
             <div>
                 <h5 className="mb-2 text-2xl font-bold tracking-tight text-text dark:text-text">
                     {`${decision.program.name}, ${decision.program.college.name}`}

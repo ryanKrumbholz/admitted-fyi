@@ -12,7 +12,7 @@ const button = cva(
     variants: {
       variant: {
         primary:
-          'text-base bg-blue hover:text-mantle hover:bg-mantle', // Replace 'base' and 'mantle' with actual Catppuccin color names
+          'text-base bg-blue', // Replace 'base' and 'mantle' with actual Catppuccin color names
         secondary:
           'text-blue border border-blue bg-transparent hover:bg-blue hover:text-white', // Replace 'blue' with the actual color you want
       },

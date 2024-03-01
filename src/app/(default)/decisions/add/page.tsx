@@ -10,7 +10,10 @@ export default async function DecisionsPage() {
   }
 
   return (
-  <div className="container mx-auto">
+  <div className="container mx-auto max-w-2xl">
+    <h1 className='font-bold text-2xl mb-5'>
+      New Decision Form
+    </h1>
     <NewDecisionForm/>
   </div>
 );

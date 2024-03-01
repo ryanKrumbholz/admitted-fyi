@@ -51,28 +51,33 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
 
   return (
     <div>
-       <TextField
-        required={required}
-        label={label}
-        id={id}
-        name={name}
-        placeholder={placeholder}
-        value={value}
-        onChange={handleChange}
-        onFocus={() => { setShowOptions(true)}}
-        disabled={disabled}
-        className={`mt-1 block w-full border rounded-md shadow-sm p-2 ${disabled ? 'bg-gray-700 text-gray-500 border-gray-200' : 'border-gray-300'}`}
-      />
-      {showOptions && (
-        <ul className="options">
-          {options.map((option) => (
-            <li key={option.value.toString()} onClick={() => handleOptionClick(option)} className="option">
-              {option.label}
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+  <TextField
+    type="text"
+    required={required}
+    label={label}
+    id={id}
+    name={name}
+    placeholder={placeholder}
+    value={value}
+    onChange={handleChange}
+    onFocus={() => { setShowOptions(true) }}
+    disabled={disabled}
+    className={`mt-1 block w-full rounded-md shadow-sm p-2 text-base border-mantle ${disabled ? 'bg-surface2   text-base-content' : 'bg-base-100'}`}
+  />
+  {showOptions && (
+    <ul className="options bg-surface0 rounded-md mt-1 overflow-hidden">
+      {options.map((option) => (
+        <li 
+          key={option.value.toString()} 
+          onClick={() => handleOptionClick(option)} 
+          className="option p-2 cursor-pointer text-white"
+        >
+          {option.label}
+        </li>
+      ))}
+    </ul>
+  )}
+</div>
   );
 };
 
