@@ -28,8 +28,8 @@ export const decisionRouter = createTRPCRouter({
         programId, 
         status,
         OR: searchString ? [
-          { program: { name: { contains: searchString, mode: 'insensitive' } } },
-          { program: { college: { name: { contains: searchString, mode: 'insensitive' } } } },
+          { program: { name: { contains: searchString} } },
+          { program: { college: { name: { contains: searchString } } } },
         ] : undefined,
       };
 
@@ -121,7 +121,7 @@ export const decisionRouter = createTRPCRouter({
   edit: protectedProcedure
     .input(
       z.object({
-        id: z.number(),
+        id: z.string(),
         data: z.object({
           status: z.nativeEnum(Status).optional(),
           content: z.string().min(1).optional(),
@@ -153,7 +153,7 @@ export const decisionRouter = createTRPCRouter({
     }),
 
   delete: protectedProcedure
-    .input(z.number())
+    .input(z.string())
     .mutation(async ({ ctx, input: id }) => {
       const decision = await ctx.db.decision.findUnique({
         where: { id },

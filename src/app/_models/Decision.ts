@@ -7,7 +7,7 @@ import { type User } from "./User";
 import { type Verification } from "./Verification";
 
 export interface Decision {
-  id: number;
+  id: string;
   userId: string | null;
   statsId: string;
   programId: number;

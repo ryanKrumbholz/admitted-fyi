@@ -24,7 +24,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
         name={name}
         type={type}
         className={classNames(
-          'block w-full py-1 rounded shadow-sm bg-base-100 border-base-200 focus:ring-2 focus:ring-lavender focus:outline-none',
+          'block w-full py-1 rounded shadow-sm text-base border-base-200 focus:ring-2 focus:ring-lavender focus:outline-none',
           className,
         )}
       />
