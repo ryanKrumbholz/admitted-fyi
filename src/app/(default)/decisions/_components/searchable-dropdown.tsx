@@ -14,6 +14,7 @@ interface SearchableDropdownProps {
   options: Option[];
   onOptionSelected: (option: Option) => void;
   onSearch: (searchTerm: string) => void;
+  disabled?: boolean;
 }
 
 const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
@@ -23,7 +24,8 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
   label,
   name,
   placeholder,
-  id 
+  id,
+  disabled
   }) => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [showOptions, setShowOptions] = useState<boolean>(false);
@@ -56,6 +58,7 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
         onChange={handleChange}
         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
         onFocus={() => { setShowOptions(true)}}
+        disabled={disabled}
       />
       {showOptions && (
         <ul className="options">

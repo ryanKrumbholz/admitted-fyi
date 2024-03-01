@@ -8,9 +8,11 @@ import { type Program } from '~/app/_models/Program';
 import { TextField } from '~/app/_components/text-field';
 import SearchableDropdown from './searchable-dropdown';
 import ImageUpload from '~/app/_components/image-upload';
-import { genHeadlessUserId } from '~/app/_util/user';
 import { type College } from '~/app/_models/College';
 import { getSession } from 'next-auth/react';
+import { genHeadlessUserId } from '~/app/_util/user';
+import { Stats } from '@prisma/client';
+import { Verification } from '@prisma/client';
 
 interface DecisionInput {
     programId: number;
@@ -45,8 +47,8 @@ const NewDecisionForm: React.FC = () => {
     verified: false,
     imgUrl: '',
   });
-  const [programDegreeType, setProgramDegreeType] = useState<string>();
-  const [selectedCollgeId, setSelectedCollegeId] = useState<number>();
+  const [programDegreeType, setProgramDegreeType] = useState<DegreeType>(DegreeType.BA);
+  const [selectedCollgeId, setSelectedCollegeId] = useState<number>(0);
   const [programSearch, setProgramSearch] = useState('');
   const [collegeSearch, setCollegeSearch] = useState('');
   const [programs, setPrograms] = useState<Program[]>([]);
@@ -57,6 +59,8 @@ const NewDecisionForm: React.FC = () => {
         console.log("Decision added successfully");
     },
   });
+  const addVerificationMutation = api.verification.add.useMutation();
+  const addStatsMutation = api.stats.add.useMutation();
 
   const { data: programData } = api.program.list.useQuery({ searchString: programSearch, collegeId: selectedCollgeId, degreeType: programDegreeType}, { enabled: !!programSearch });
   const { data: collegeData } = api.college.list.useQuery({ searchString: collegeSearch }, { enabled: !!collegeSearch });
@@ -110,38 +114,45 @@ const NewDecisionForm: React.FC = () => {
         };
 
         const statsInput: StatsInput = {
-          gpa: parseFloat(formState.gpa),
-          greVerbal: parseInt(formState.greVerbal, 10),
-          greWritten: parseInt(formState.greWritten, 10),
-          degreeType: formState.statsDegreeType,
-      };
+            gpa: parseFloat(formState.gpa),
+            greVerbal: parseInt(formState.greVerbal, 10),
+            greWritten: parseInt(formState.greWritten, 10),
+            degreeType: formState.statsDegreeType,
+        };
+
+        const session = await getSession();
+        const userId = session?.user ? session.user.id : genHeadlessUserId();
 
         try {
+            // Using mutateAsync to wait for the mutation to complete and get the result
+            const statsResult: Stats = await addStatsMutation.mutateAsync(statsInput);
+            const verificationResult: Verification = await addVerificationMutation.mutateAsync(verificationInput);
 
-            const addVerificationMutation = api.verificationRouter.add.useMutation();
-            const addStatsMutation = api.statsRouter.add.useMutation();
-
-            const session = await getSession();
-
-            const statsId = addStatsMutation.mutate(statsInput);
-            const verificationId = addVerificationMutation.mutate(verificationInput);
-            const userId = session?.user ? session.user.id : genHeadlessUserId();
+            // Assuming these results contain an ID or some identifier you need
+            const statsId = statsResult.id; // You'll need to adjust based on actual returned structure
+            const verificationId = verificationResult.id; // Adjust based on actual structure
 
             const decisionInput: DecisionInput = {
-                userId: userId,
-                statsId: "statsId",
-                verificationId: "verificationId",
+                userId,
+                statsId,
+                verificationId,
                 programId: formState.programId,
                 status: formState.status,
                 collegeId: formState.collegeId,
             };
 
-            addDecisionMutation.mutate(decisionInput);
+            // You can now await this mutation as well and do something with the result
+            const decisionResult = await addDecisionMutation.mutateAsync(decisionInput);
+
+            // Handle success, e.g., showing a message or redirecting the user
+            console.log("Decision added successfully", decisionResult);
         } catch (error) {
-            console.error("Error creating decision-related records", error);
+            // Handle any errors that occur during the mutation
+            console.error("An error occurred", error);
         }
     }
-  };
+};
+
 
   const handleProgramSearchChange = (searchTerm: string) => { setProgramSearch(searchTerm); };
   const handleCollegeSearchChange = (searchTerm: string) => { setCollegeSearch(searchTerm); };
@@ -166,7 +177,7 @@ const NewDecisionForm: React.FC = () => {
           value={programDegreeType}
           onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
             const { value } = e.target;
-            setProgramDegreeType(value);
+            setProgramDegreeType(value as DegreeType);
           }}
           className='block w-full py-1 bg-secondary focus-ring border border-gray-300 rounded-md shadow-sm p-2'
         >
@@ -184,6 +195,7 @@ const NewDecisionForm: React.FC = () => {
         options={programData?.programs.map(p => {return {label: p.name, value: p.id}}) ?? []}
         onOptionSelected={handleProgramSelected}
         onSearch={handleProgramSearchChange}
+        disabled={!selectedCollgeId || !programDegreeType}
       />
 
       <div>

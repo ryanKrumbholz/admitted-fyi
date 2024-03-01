@@ -8,7 +8,7 @@ interface ImageUploadProps {
 const ImageUpload: React.FC<ImageUploadProps> = ({ onSuccess }) => {
   const [dragging, setDragging] = useState(false);
 
-  const s3UploadMutation = api.s3Router.getPresignedUrl.useMutation();
+  const s3UploadMutation = api.s3.getPresignedUrl.useMutation();
 
   const handleDragEnter = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();

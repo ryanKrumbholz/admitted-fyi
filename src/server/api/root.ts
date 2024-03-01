@@ -17,9 +17,9 @@ export const appRouter = createTRPCRouter({
   decision: decisionRouter,
   college: collegeRouter,
   program: programRouter,
-  s3Router: s3Router,
-  statsRouter: statsRouter,
-  verificationRouter: verificationRouter,
+  s3: s3Router,
+  stats: statsRouter,
+  verification: verificationRouter,
 })
 
 // export type definition of API

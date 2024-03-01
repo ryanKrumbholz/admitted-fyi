@@ -93,7 +93,7 @@ model Decision {
   statsId        String   @unique
 
   college      College      @relation(fields: [collegeId], references: [id])
-  user         User         @relation(fields: [userId], references: [id])
+  user         User?         @relation(fields: [userId], references: [id])
   program      Program      @relation(fields: [programId], references: [id])
   stats        Stats        @relation(fields: [statsId], references: [id])
   verification Verification @relation(fields: [verificationId], references: [id])
