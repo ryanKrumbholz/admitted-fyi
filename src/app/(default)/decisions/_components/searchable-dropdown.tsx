@@ -15,6 +15,7 @@ interface SearchableDropdownProps {
   onOptionSelected: (option: Option) => void;
   onSearch: (searchTerm: string) => void;
   disabled?: boolean;
+  required?: boolean;
 }
 
 const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
@@ -25,7 +26,8 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
   name,
   placeholder,
   id,
-  disabled
+  disabled,
+  required
   }) => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [showOptions, setShowOptions] = useState<boolean>(false);
@@ -50,6 +52,7 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
   return (
     <div>
        <TextField
+        required={required}
         label={label}
         id={id}
         name={name}

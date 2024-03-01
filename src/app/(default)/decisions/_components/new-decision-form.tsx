@@ -19,9 +19,9 @@ const NewDecisionForm: React.FC = () => {
     programId: 0,
     collegeId: 0,
     status: undefined,
-    gpa: '',
-    greVerbal: '',
-    greWritten: '',
+    gpa: undefined,
+    greVerbal: undefined,
+    greWritten: undefined,
     statsDegreeType: undefined,
     verified: false,
     imgUrl: '',
@@ -88,13 +88,6 @@ const NewDecisionForm: React.FC = () => {
         verified: formState.verified,
         imgUrl: formState.imgUrl,
     };
-
-    const statsInput: StatsInput = {
-        gpa: parseFloat(formState.gpa),
-        greVerbal: parseInt(formState.greVerbal, 10),
-        greWritten: parseInt(formState.greWritten, 10),
-        degreeType: formState.statsDegreeType,
-    };
         try {
             setIsSubmitting(true);
             const verificationInput: VerificationInput = {
@@ -103,9 +96,9 @@ const NewDecisionForm: React.FC = () => {
           };
   
           const statsInput: StatsInput = {
-              gpa: parseFloat(formState.gpa),
-              greVerbal: parseInt(formState.greVerbal, 10),
-              greWritten: parseInt(formState.greWritten, 10),
+              gpa: formState.gpa,
+              greVerbal: formState.greVerbal,
+              greWritten: formState.greWritten,
               degreeType: formState.statsDegreeType,
           };
 
@@ -135,6 +128,7 @@ const NewDecisionForm: React.FC = () => {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <SearchableDropdown
+        required={true}
         label='Institution'
         placeholder=''
         id=''
@@ -147,6 +141,7 @@ const NewDecisionForm: React.FC = () => {
       <div>
         <label htmlFor="degreeType" className="block  font-bold">Degree</label>
         <select
+          required={true}
           id="degree"
           name="programDegreeType"
           value={programDegreeType}
@@ -156,13 +151,14 @@ const NewDecisionForm: React.FC = () => {
           }}
           className='block w-full py-1 bg-secondary focus-ring border border-gray-300 rounded-md shadow-sm p-2'
         >
-          {Object.values(DegreeType).map(status => (
-            <option key={status} value={status}>{status}</option>
+          {Object.values(DegreeType).filter(degreeType => degreeType !== DegreeType.BA && degreeType !== DegreeType.BS).map(degreeType => (
+            <option key={degreeType} value={degreeType}>{degreeType}</option>
           ))}
         </select>
       </div>
 
       <SearchableDropdown
+        required={true}
         label='Program'
         placeholder=''
         id=''
@@ -176,6 +172,7 @@ const NewDecisionForm: React.FC = () => {
       <div>
         <label htmlFor="status" className="block  font-bold">Status</label>
         <select
+          required={true}
           id="status"
           name="status"
           value={formState.status}
@@ -189,7 +186,8 @@ const NewDecisionForm: React.FC = () => {
       </div>
 
         <TextField
-          label='GPA (4.0)'
+          required={true}
+          label='GPA (4.0 scale)'
           type="number"
           step="0.01"
           max="4.0"
@@ -202,7 +200,7 @@ const NewDecisionForm: React.FC = () => {
 
 
         <TextField
-          label='GRE Verbal'
+          label='GRE Verbal (optional)'
           type="number"
           id="greVerbal"
           name="greVerbal"
@@ -214,7 +212,7 @@ const NewDecisionForm: React.FC = () => {
         />
 
         <TextField
-          label='GRE Written'
+          label='GRE Written (optional)'
           type="number"
           id="greWritten"
           name="greWritten"

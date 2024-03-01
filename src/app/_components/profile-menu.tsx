@@ -13,12 +13,14 @@ import { useTheme } from 'next-themes'
 import { capitalize } from 'string-ts'
 import { signOut } from 'next-auth/react'
 import { type Session } from 'next-auth'
-import { usePathname } from 'next/navigation'
 import { classNames } from '~/utils/core'
 
-export const ProfileMenu = ({ session }: { session: Session | null }) => {
+export const ProfileMenu = ({ session, pathname }: { session: Session | null, pathname: string }) => {
   const { theme, themes, setTheme } = useTheme()
-  const pathname = usePathname()
+
+  if (!session?.user) {
+    return
+  }
 
   const menuItemClasses = ({
     active,
@@ -42,9 +44,9 @@ export const ProfileMenu = ({ session }: { session: Session | null }) => {
         <MenuItemsContent>
           <MenuItem>
             <MenuItemLink
-              href={`/profile/${session!.user.id}`}
+              href={`/profile/${session.user.id}`}
               className={menuItemClasses({
-                active: pathname === `/profile/${session!.user.id}`,
+                active: pathname === `/profile/${session.user.id}`,
               })}
             >
               Profile
