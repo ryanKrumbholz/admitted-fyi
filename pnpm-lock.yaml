@@ -80,6 +80,9 @@ dependencies:
   jsdom:
     specifier: ^23.0.1
     version: 23.0.1
+  lodash:
+    specifier: ^4.17.21
+    version: 4.17.21
   marked:
     specifier: ^11.0.0
     version: 11.0.0
@@ -178,6 +181,9 @@ devDependencies:
   '@types/jsdom':
     specifier: ^21.1.6
     version: 21.1.6
+  '@types/lodash':
+    specifier: ^4.14.202
+    version: 4.14.202
   '@types/node':
     specifier: ^18.17.0
     version: 18.18.14
@@ -2056,6 +2062,10 @@ packages:
 
   /@types/json-schema@7.0.15:
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
+    dev: true
+
+  /@types/lodash@4.14.202:
+    resolution: {integrity: sha512-OvlIYQK9tNneDlS0VN54LLd5uiPCBOp7gS5Z0f1mjoJYBrtStzgmJBxONW3U6OZqdtNzZPmn9BS/7WI7BFFcFQ==}
     dev: true
 
   /@types/node@18.18.14:

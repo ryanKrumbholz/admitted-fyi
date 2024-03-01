@@ -1,63 +1,47 @@
-'use client'
-
-import { usePathname } from 'next/navigation'
-import { Button } from './button'
+import React from 'react'; // Import React
 
 type PaginationProps = {
-  itemCount: number
-  itemsPerPage: number
-  currentPageNumber: number
-}
+  itemCount: number;
+  itemsPerPage: number;
+  currentPageNumber: number;
+  onPageChange: (newPage: number) => void; // New parameter for handling page changes
+};
 
 export const Pagination = ({
   itemCount,
   itemsPerPage,
   currentPageNumber,
+  onPageChange,
 }: PaginationProps) => {
-  const pathname = usePathname()
-
-  const totalPages = Math.ceil(itemCount / itemsPerPage)
+  const totalPages = Math.ceil(itemCount / itemsPerPage);
 
   if (totalPages <= 1) {
-    return null
+    return null; // Don't render pagination if there's only one page or less
   }
+
+  const goToPage = (page: number) => {
+    // Prevent going to a page outside of valid range
+    if (page >= 1 && page <= totalPages) {
+      onPageChange(page);
+    }
+  };
 
   return (
     <div className="flex justify-center gap-4 mt-12">
-      <Button
-        href={{
-          pathname,
-          query: {
-            page: currentPageNumber - 1,
-          },
-        }}
-        variant="secondary"
-        className={
-          currentPageNumber === 1 ? 'pointer-events-none opacity-50' : ''
-        }
+      <button
+        onClick={() => goToPage(currentPageNumber - 1)}
+        disabled={currentPageNumber === 1}
+        className={`px-4 py-2 border rounded-md ${currentPageNumber === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200'}`}
       >
-        <span className="mr-1">
-
-        </span>
         Newer posts
-      </Button>
-      <Button
-        href={{
-          pathname,
-          query: { page: currentPageNumber + 1 },
-        }}
-        variant="secondary"
-        className={
-          currentPageNumber === totalPages
-            ? 'pointer-events-none opacity-50'
-            : ''
-        }
+      </button>
+      <button
+        onClick={() => goToPage(currentPageNumber + 1)}
+        disabled={currentPageNumber === totalPages}
+        className={`px-4 py-2 border rounded-md ${currentPageNumber === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200'}`}
       >
-        Older posts{' '}
-        <span className="ml-1">
-
-        </span>
-      </Button>
+        Older posts
+      </button>
     </div>
-  )
-}
+  );
+};

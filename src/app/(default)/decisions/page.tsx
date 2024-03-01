@@ -1,54 +1,67 @@
-"use client"
+'use client'
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Pagination } from '../../_components/pagination';
 import Filters from './_components/filter-bar';
-import { api } from '~/trpc/react'
+import { api } from '~/trpc/react';
 import { type Decision } from '~/app/_models/Decision';
 import DecisionCard from './_components/decision-card';
 import SearchBar from '~/app/_components/search-bar';
+import { debounce } from 'lodash'; // Assuming lodash is installed for debouncing
 
 const DECISIONS_PER_PAGE = 20;
 
 export default function DecisionsPage() {
-  const [decisions, setDecisions] = useState<Decision[]>([]);
   const [pageNumber, setPageNumber] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
 
+  // Debounce searchQuery updates
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 500); // Adjust debounce time as needed
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchQuery]);
+
+  // Fetching decisions
   const { data, isLoading, isError } = api.decision.feed.useQuery({
     take: DECISIONS_PER_PAGE,
     skip: pageNumber * DECISIONS_PER_PAGE,
-    searchString: searchQuery, // This will trigger a refetch whenever searchQuery changes
+    searchString: debouncedSearchQuery,
   }, {
-    keepPreviousData: true, // Optional: This can help with pagination
+    keepPreviousData: true,
   });
 
-  useEffect(() => {
-    if (data?.decisions) {
-      setDecisions(data.decisions);
-      setPageNumber(0);
-    }
-  }, [data?.decisions]);
-
-  const handleSearch = (query: string) => {
+  const handleSearch = useCallback((query: string) => {
+    setPageNumber(0); // Reset pagination on new search
     setSearchQuery(query);
-    // You don't need to directly call the API here; updating searchQuery will trigger the useQuery refetch
-  };
+  }, []);
 
   return (
     <div className="container max-w-4xl mx-auto flex flex-col items-center gap-y-4">
       <div className='container max-w-2xl mb-8'>
-        <SearchBar onSearch={(query) => handleSearch(query)}/>
+        <SearchBar onSearch={handleSearch}/>
         <Filters/>
       </div>
-    <ul>
-      {decisions.map((decision: Decision) => (
-        <li>
-          <DecisionCard decision={decision}/>
-        </li>
+      <ul>
+        {data?.decisions.map((decision) => (
+          <li key={decision.id}>
+            <DecisionCard decision={decision}/>
+          </li>
         ))} 
-    </ul>
-    <Pagination itemCount={20} itemsPerPage={DECISIONS_PER_PAGE} currentPageNumber={pageNumber}/>
-  </div>
-);
+      </ul>
+      {data && (
+        <Pagination 
+          itemCount={data.decisionCount} // Assuming your API returns the total count
+          itemsPerPage={DECISIONS_PER_PAGE} 
+          currentPageNumber={pageNumber}
+          onPageChange={setPageNumber} // Assuming Pagination component accepts onPageChange prop
+        />
+      )}
+    </div>
+  );
 }
