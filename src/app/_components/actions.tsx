@@ -13,7 +13,7 @@ export const Actions = ({ session }: { session: Session | null }) => {
   const currentPath = usePathname(); 
   return (
     <div className="flex items-center gap-2 md:gap-4">
-      <ProfileMenu session={session} />
+      <ProfileMenu session={session} pathname={currentPath}/>
       <AddDecisionButtonLink currentPath={currentPath}/>
     </div>
   )
