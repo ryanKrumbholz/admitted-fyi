@@ -1,7 +1,6 @@
 'use client'
 
 import { type Session } from 'next-auth'
-import { Button } from './button'
 import { ProfileMenu } from './profile-menu'
 import { useSearchStore } from '~/app/_hooks/use-search-store'
 import { AddDecisionButtonLink } from './add-decision-button'

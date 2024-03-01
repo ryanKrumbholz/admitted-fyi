@@ -16,6 +16,6 @@ export interface Decision {
   verificationId: string;
   user?: User;
   program: Program;
-  stats?: Stats
+  stats: Stats
   verification: Verification;
 }

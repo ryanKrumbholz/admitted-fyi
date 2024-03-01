@@ -57,6 +57,7 @@ export const decisionRouter = createTRPCRouter({
             },
           },
           verification: true,
+          stats: true
         },
       })
 
