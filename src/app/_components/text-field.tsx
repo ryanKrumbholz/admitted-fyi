@@ -11,7 +11,7 @@ type TextFieldProps = TextFieldOwnProps &
 export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
   ({ label, id, name, type = 'text', className, ...rest }, forwardedRef) => {
     return (
-      <div>
+      <div className='min-w-full'>
         {label && (
           <label htmlFor={id ?? name} className="block mb-2 font-semibold">
             {label}

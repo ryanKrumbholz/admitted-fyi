@@ -128,7 +128,6 @@ const NewDecisionForm: React.FC = () => {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <SearchableDropdown
-        required={true}
         label='Institution'
         placeholder=''
         id=''

@@ -36,9 +36,11 @@ export default function DecisionsPage() {
   };
 
   return (
-  <div className="container mx-auto">
-    <SearchBar onSearch={(query) => handleSearch(query)}/>
-    <Filters/>
+    <div className="container max-w-4xl mx-auto flex flex-col items-center gap-y-4">
+      <div className='container max-w-2xl mb-8'>
+        <SearchBar onSearch={(query) => handleSearch(query)}/>
+        <Filters/>
+      </div>
     <ul>
       {decisions.map((decision: Decision) => (
         <li>

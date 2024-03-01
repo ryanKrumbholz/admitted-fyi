@@ -12,9 +12,7 @@ const button = cva(
     variants: {
       variant: {
         primary:
-          'text-secondary-inverse bg-secondary-inverse hover:text-primary-inverse hover:bg-primary-inverse',
-        secondary:
-          'border text-primary border-secondary bg-primary hover:bg-secondary',
+          'text-base bg-blue hover:text-mantle', // Assuming `base` and `mantle` are Catppuccin color names
       },
     },
     defaultVariants: {

@@ -13,8 +13,8 @@ export default async function DefaultLayout({
 
   return (
     <AuthProvider session={session}>
-      <div className="max-w-3xl px-6 mx-auto">
-        <Header />
+      <div className="max-w-7xl mx-auto">
+        <Header/>
         {children}
         <div className="py-20">
           <Footer />
