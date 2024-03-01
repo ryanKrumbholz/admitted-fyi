@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server';
-import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
+import { createTRPCRouter, internalProcedure, publicProcedure } from '../trpc';
 import { z } from 'zod';
 import { DegreeType } from '~/app/_models/DegreeType';
 import { strictEqual } from 'assert';

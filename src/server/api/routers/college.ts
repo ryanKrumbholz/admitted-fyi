@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server';
-import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
+import { createTRPCRouter, publicProcedure } from '../trpc';
 import { z } from 'zod';
 
 export const collegeRouter = createTRPCRouter({
@@ -44,7 +44,7 @@ export const collegeRouter = createTRPCRouter({
     }),
 
 //   // Add a new college
-//   add: protectedProcedure
+//   add: internalProcedure
 //     .input(
 //       z.object({
 //         name: z.string().min(1),

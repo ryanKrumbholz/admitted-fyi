@@ -1,11 +1,11 @@
 import { TRPCError } from '@trpc/server';
-import { createTRPCRouter, publicProcedure } from '../trpc';
+import { createTRPCRouter, internalProcedure } from '../trpc';
 import { z } from 'zod';
 import { s3Client } from '~/server/clients/s3Client';
 
 export const s3Router = createTRPCRouter({
   
-    getPresignedUrl: publicProcedure
+    getPresignedUrl: internalProcedure
     .input(z.object({
         fileName: z.string(),
         fileType: z.string()

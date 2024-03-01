@@ -1,10 +1,10 @@
 import { TRPCError } from '@trpc/server';
-import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
+import { createTRPCRouter, internalProcedure } from '../trpc';
 import { z } from 'zod';
 import { Verification } from '@prisma/client';
 
 export const verificationRouter = createTRPCRouter({
-  add: publicProcedure
+  add: internalProcedure
     .input(
       z.object({
         verified: z.boolean(),

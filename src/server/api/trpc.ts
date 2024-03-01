@@ -104,3 +104,19 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
  * @see https://trpc.io/docs/procedures
  */
 export const protectedProcedure = t.procedure.use(enforceUserIsAuthed)
+
+const enforceInternalAuth = t.middleware(({ ctx, next }) => {
+  // const isInternalApiCall = ctx.headers['x-internal-api-key'] === process.env.INTERNAL_API_KEY;
+  // if (!isInternalApiCall) {
+  //   throw new TRPCError({ code: 'UNAUTHORIZED' });
+  // }
+
+  return next({
+    ctx: {
+      db,
+      session: { ...ctx.session },
+    },
+  })
+})
+
+export const internalProcedure = t.procedure.use(enforceInternalAuth);

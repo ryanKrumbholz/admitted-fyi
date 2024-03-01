@@ -1,10 +1,10 @@
 import { TRPCError } from '@trpc/server';
-import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
+import { createTRPCRouter, internalProcedure } from '../trpc';
 import { z } from 'zod';
 import { Stats, DegreeType } from '@prisma/client';
 
 export const statsRouter = createTRPCRouter({
-  add: publicProcedure
+  add: internalProcedure
     .input(
       z.object({
         gpa: z.number().optional(),
