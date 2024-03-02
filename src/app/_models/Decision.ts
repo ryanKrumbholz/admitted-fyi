@@ -18,4 +18,5 @@ export interface Decision {
   program: Program;
   stats: Stats
   verification: Verification;
+  termYearString: string;
 }

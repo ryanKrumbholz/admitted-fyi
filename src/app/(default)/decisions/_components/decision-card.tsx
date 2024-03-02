@@ -25,6 +25,9 @@ const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
                 <p className="font-normal text-subtext dark:text-subtext">
                     Decision Date: {formattedDate}
                 </p>
+                <p className={`font-normal text-subtext dark:text-subtext`}>
+                    Term: {decision.termYearString}
+                </p>
                 <p className={`font-normal ${decision.status === 'ACCEPTED' ? 'text-green' : 'text-subtext'} dark:text-subtext`}>
                     Status: {decision.status}
                 </p>

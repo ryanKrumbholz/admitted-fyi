@@ -50,7 +50,7 @@ export default function DecisionsPage() {
       </div>
       <ul className='w-full max-w-2xl'>
       {isLoading ? (
-          Array.from({ length: DECISIONS_PER_PAGE }).map((_, index) => (
+          Array.from({ length: 4 }).map((_, index) => (
             <li key={index} className='w-full'>
               <DecisionCardSkeleton/>
             </li>
