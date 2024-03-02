@@ -35,11 +35,8 @@ const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
                     <div className="flex mt-4 gap-2">
                         {/* Use formatGPA function to display GPA */}
                         <div className="bg-lavender p-2 rounded text-crust">GPA: {formatGPA(decision.stats.gpa)}</div>
-                        {decision.stats.greVerbal && (
-                            <div className="bg-lavender p-2 rounded text-crust">GRE Verbal: {decision.stats.greVerbal}</div>
-                        )}
-                        {decision.stats.greWritten && (
-                            <div className="bg-lavender p-2 rounded text-crust">GRE Written: {decision.stats.greWritten}</div>
+                        {decision.stats.residency && (
+                            <div className="bg-lavender p-2 rounded text-crust">Residency: {decision.stats.residency}</div>
                         )}
                     </div>
                 )}

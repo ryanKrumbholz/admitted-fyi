@@ -119,10 +119,9 @@ model UserPreference {
 model Stats {
   id         String      @id @default(cuid())
   gpa        Float?
-  greVerbal  Int?
-  greWritten Int?
   degreeType DegreeType?
   decision   Decision?
+  residency  Residency?
 }
 
 enum Status {
@@ -130,6 +129,11 @@ enum Status {
   INTERVIEW
   ACCEPTED
   REJECTED
+}
+
+enum Residency {
+  AMERICAN
+  INTERNATIONAL
 }
 
 enum Term {

@@ -16,6 +16,7 @@ import { type DecisionInput } from '~/server/model/decision-input';
 import { Button } from '~/app/_components/button';
 import DatePicker from '~/app/_components/date-picker';
 import { Term } from '~/app/_models/Term';
+import { Residency } from '~/app/_models/Residency';
 
 const NewDecisionForm: React.FC = () => {
   const [formState, setFormState] = useState({
@@ -23,8 +24,7 @@ const NewDecisionForm: React.FC = () => {
     collegeId: 0,
     status: undefined,
     gpa: undefined,
-    greVerbal: undefined,
-    greWritten: undefined,
+    residency: undefined,
     statsDegreeType: undefined,
     verified: false,
     imgUrl: '',
@@ -106,8 +106,7 @@ const NewDecisionForm: React.FC = () => {
   
           const statsInput: StatsInput = {
               gpa: formState.gpa,
-              greVerbal: formState.greVerbal,
-              greWritten: formState.greWritten,
+              residency: formState.residency,
               degreeType: formState.statsDegreeType,
           };
 
@@ -237,33 +236,23 @@ const handleDateChange = (date: Date | null) => {
      onChange={handleChange}
      className="w-full py-1 bg-surface border-mantle rounded-md p-2 focus:ring-lavender focus:outline-none"
    />
- 
-   <TextField
-     label='GRE Verbal (optional)'
-     type="number"
-     id="greVerbal"
-     name="greVerbal"
-     placeholder='ex. 170'
-     min="130"
-     max="170"
-     value={formState.greVerbal}
-     onChange={handleChange}
-     className="w-full py-1 bg-surface border-mantle rounded-md p-2 focus:ring-lavender focus:outline-none"
-   />
- 
-   <TextField
-     label='GRE Written (optional)'
-     type="number"
-     id="greWritten"
-     name="greWritten"
-     placeholder='ex. 6'
-     min="0"
-     max="6"
-     step="0.5"
-     value={formState.greWritten}
-     onChange={handleChange}
-     className="w-full py-1 bg-surface border-mantle rounded-md p-2 focus:ring-lavender focus:outline-none"
-   />
+
+<div>
+     <label htmlFor="residency" className="block font-bold text-white">Residency Status (Optional)</label>
+     <select
+       id="residency"
+       name="residency"
+       value={formState.residency}
+       onChange={handleChange}
+
+       className='block w-full py-1 bg-surface border-mantle rounded-md p-2 focus:ring-lavender focus:outline-none'
+     >
+      <option value="" selected disabled hidden>Select degree type</option>
+       {Object.values(Residency).map(residency => (
+         <option key={residency} value={residency}>{residency}</option>
+       ))}
+     </select>
+   </div>
 
   <div>
      <label htmlFor="statsDegreeType" className="block font-bold text-white">Degree Held (Optional)</label>

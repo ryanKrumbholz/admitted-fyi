@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server'
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc'
 import { z } from 'zod'
-import { Status, Stats, Verification, DegreeType, Term } from '@prisma/client';
+import { Status, Stats, Verification, DegreeType, Term, Residency } from '@prisma/client';
 import { api } from '~/trpc/server';
 import { getServerSession } from 'next-auth';
 import { genHeadlessUserId } from '~/app/_util/user';
@@ -83,7 +83,7 @@ export const decisionRouter = createTRPCRouter({
         }),
         statsInput:  z.object({
             gpa: z.number().optional(),
-            greVerbal: z.number().optional(),
+            residency: z.nativeEnum(Residency).optional(),
             greWritten: z.number().optional(),
             degreeType: z.nativeEnum(DegreeType).optional(),
           
