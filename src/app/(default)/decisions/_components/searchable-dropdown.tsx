@@ -62,7 +62,7 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
     onChange={handleChange}
     onFocus={() => { setShowOptions(true) }}
     disabled={disabled}
-    className={`mt-1 block w-full rounded-md shadow-sm p-2 text-base border-mantle ${disabled ? 'bg-surface2   text-base-content' : 'bg-base-100'}`}
+    className={`mt-1 block w-full rounded-md p-2 text-base border-mantle ${disabled ? 'bg-surface2   text-base-content' : 'bg-base-100'}`}
   />
   {showOptions && (
     <ul className="options bg-surface0 rounded-md mt-1 overflow-hidden">
