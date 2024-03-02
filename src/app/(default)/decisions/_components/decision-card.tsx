@@ -10,6 +10,12 @@ const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
         year: 'numeric', month: 'long', day: 'numeric'
     });
 
+    const formatGPA = (gpa: number | null): string => {
+        if (gpa === null) return "N/A"; // Handle null case
+        // No need to parse as a float since it's already a number
+        return gpa.toFixed(2); // Format as a string with 2 decimal places
+    };
+
     return (
         <div className="flex min-w-full min-h-56 p-3 bg-base border-l-4 dark:bg-surface dark:border-lavender justify-between mb-7">
             <div className="mr-auto">
@@ -24,7 +30,8 @@ const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
                 </p>
                 {decision.stats && (
                     <div className="flex mt-4 gap-2">
-                        <div className="bg-lavender p-2 rounded text-crust">GPA: {decision.stats.gpa}</div>
+                        {/* Use formatGPA function to display GPA */}
+                        <div className="bg-lavender p-2 rounded text-crust">GPA: {formatGPA(decision.stats.gpa)}</div>
                         {decision.stats.greVerbal && (
                             <div className="bg-lavender p-2 rounded text-crust">GRE Verbal: {decision.stats.greVerbal}</div>
                         )}

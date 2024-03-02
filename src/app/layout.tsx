@@ -7,6 +7,7 @@ import { TRPCReactProvider } from '~/trpc/react'
 import { classNames } from '~/utils/core'
 import { ThemeProvider } from '~/app/_providers/theme'
 import { Toaster } from '~/app/_providers/toaster'
+import { Analytics } from "@vercel/analytics/react"
 
 import { SearchDialog } from './_components/search-dialog'
 
@@ -41,6 +42,7 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={classNames('font-sans min-h-screen', inter.variable)}>
         <ThemeProvider>
+          <Analytics/>
           <TRPCReactProvider cookies={cookies().toString()}>
             <main>{children}</main>
 

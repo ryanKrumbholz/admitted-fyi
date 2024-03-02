@@ -53,10 +53,7 @@ const PrivacyPage = () => {
         If you have any questions about this Privacy Policy, please contact us:
       </p>
       <ul className="list-disc pl-6 mb-4">
-        <li>By email: [your email]</li>
-        <li>By visiting this page on our website: [website contact page]</li>
-        <li>By phone number: [your phone number]</li>
-        <li>By mail: [your mailing address]</li>
+        <li>By email: contact@admitted.fyi</li>
       </ul>
     </div>
   );

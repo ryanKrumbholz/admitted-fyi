@@ -14,7 +14,7 @@ const ContactPage = () => {
       <div className="mb-4">
         <h2 className="text-2xl font-semibold mb-2">Email Us</h2>
         <p>
-          For general inquiries, please email us at: <a href="mailto:info@example.com" className="text-blue-600 hover:underline">info@example.com</a>
+          For general inquiries, please email us at: <a href="mailto:contact@admitted.fyi" className="text-blue-600 hover:underline">info@example.com</a>
         </p>
       </div>
       <div>
