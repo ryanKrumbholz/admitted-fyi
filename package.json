@@ -31,6 +31,7 @@
     "@trpc/server": "^10.43.6",
     "@tryfabric/mack": "^1.2.1",
     "@vercel/analytics": "^1.2.2",
+    "@vercel/speed-insights": "^1.0.10",
     "aws-sdk": "^2.1568.0",
     "class-variance-authority": "^0.7.0",
     "cloudinary": "^1.41.0",

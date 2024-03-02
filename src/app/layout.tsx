@@ -8,6 +8,7 @@ import { classNames } from '~/utils/core'
 import { ThemeProvider } from '~/app/_providers/theme'
 import { Toaster } from '~/app/_providers/toaster'
 import { Analytics } from "@vercel/analytics/react"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 import { SearchDialog } from './_components/search-dialog'
 
@@ -47,6 +48,7 @@ export default async function RootLayout({
             <Toaster />
             <SearchDialog />
           </TRPCReactProvider>
+          <SpeedInsights/>
           <Analytics/>
         </ThemeProvider>
       </body>
