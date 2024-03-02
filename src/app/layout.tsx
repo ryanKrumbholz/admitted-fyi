@@ -42,13 +42,12 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={classNames('font-sans min-h-screen', inter.variable)}>
         <ThemeProvider>
-          <Analytics/>
           <TRPCReactProvider cookies={cookies().toString()}>
             <main>{children}</main>
-
             <Toaster />
             <SearchDialog />
           </TRPCReactProvider>
+          <Analytics/>
         </ThemeProvider>
       </body>
     </html>
