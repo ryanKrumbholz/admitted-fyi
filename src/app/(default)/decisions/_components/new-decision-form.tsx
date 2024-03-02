@@ -232,6 +232,7 @@ const handleDateChange = (date: Date | null) => {
      max="4.0"
      id="gpa"
      name="gpa"
+     placeholder='ex. 4.0'
      value={formState.gpa}
      onChange={handleChange}
      className="w-full py-1 bg-surface border-mantle rounded-md p-2 focus:ring-lavender focus:outline-none"
@@ -242,6 +243,7 @@ const handleDateChange = (date: Date | null) => {
      type="number"
      id="greVerbal"
      name="greVerbal"
+     placeholder='ex. 170'
      min="130"
      max="170"
      value={formState.greVerbal}
@@ -254,6 +256,7 @@ const handleDateChange = (date: Date | null) => {
      type="number"
      id="greWritten"
      name="greWritten"
+     placeholder='ex. 6'
      min="0"
      max="6"
      step="0.5"
@@ -280,7 +283,7 @@ const handleDateChange = (date: Date | null) => {
    </div>
 
  
-   <Button type="submit" className="" disabled={isSubmitting}>
+   <Button type="submit" disabled={isSubmitting}>
      Submit Decision
    </Button>
  </form>

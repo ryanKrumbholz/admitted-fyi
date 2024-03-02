@@ -7,6 +7,7 @@ interface DatePickerProps {
 
 const DatePicker: React.FC<DatePickerProps> = ({ onChange }) => {
   const [selectedDate, setSelectedDate] = useState('');
+  const currYear = new Date().getFullYear();
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
@@ -23,8 +24,9 @@ const DatePicker: React.FC<DatePickerProps> = ({ onChange }) => {
 
   return (
     <div>
-      <label htmlFor="date-picker" className="block text-sm font-medium text-gray-700">Select a date:</label>
+      <label htmlFor="date-picker" className="block font-bold text-white">Select a date:</label>
       <input
+        min={`${currYear-1}-01-01`} max={`${new Date().toDateString()}`}  
         name="date"
         type="date"
         id="date-picker"
