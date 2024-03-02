@@ -22,6 +22,19 @@ const DatePicker: React.FC<DatePickerProps> = ({ onChange }) => {
     }
   };
 
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.target.showPicker(); // This is experimental and not widely supported.
+  };
+
+  const handlePickerShow = (e: React.MouseEvent<HTMLInputElement>) => {
+    const input = e.target as HTMLInputElement;
+  
+  // Checking if showPicker function exists on the input element before calling it
+    if ('showPicker' in input && typeof input.showPicker === 'function') {
+      input.showPicker();
+    }
+  };
+
   return (
     <div>
       <label htmlFor="date-picker" className="block font-bold text-white">Select a date:</label>
@@ -32,6 +45,8 @@ const DatePicker: React.FC<DatePickerProps> = ({ onChange }) => {
         id="date-picker"
         value={selectedDate}
         onChange={handleDateChange}
+        onFocus={handleFocus}
+        onClick={handlePickerShow}
         className="mt-1 block w-full border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
       />
     </div>
