@@ -23,7 +23,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
       label="Search"
       id="search"
       name="search"
-      placeholder="Enter search query..."
+      placeholder="Search ex. Duke, Biostatistics, ..."
       value={searchQuery}
       onChange={(e) => setSearchQuery(e.target.value)}
       className="min-w-full" // Make TextField as wide as its container
