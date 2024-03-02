@@ -91,6 +91,7 @@ model Decision {
   date           DateTime @default(now())
   verificationId String   @unique
   statsId        String   @unique
+  term           Term
 
   college      College      @relation(fields: [collegeId], references: [id])
   user         User?        @relation(fields: [userId], references: [id])
@@ -128,6 +129,13 @@ enum Status {
   INTERVIEW
   ACCEPTED
   REJECTED
+}
+
+enum Term {
+  FALL
+  WINTER
+  SPRING
+  SUMMER
 }
 
 enum DegreeType {

@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server'
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc'
 import { z } from 'zod'
-import { Status, Stats, Verification, DegreeType } from '@prisma/client';
+import { Status, Stats, Verification, DegreeType, Term } from '@prisma/client';
 import { api } from '~/trpc/server';
 import { getServerSession } from 'next-auth';
 import { genHeadlessUserId } from '~/app/_util/user';
@@ -75,6 +75,8 @@ export const decisionRouter = createTRPCRouter({
         programId: z.number().int(),
         status: z.nativeEnum(Status),
         collegeId: z.number().int(),
+        date: z.date(),
+        term: z.nativeEnum(Term),
         verificationInput: z.object({
           verified: z.boolean(),
           imgUrl: z.string()
@@ -89,7 +91,7 @@ export const decisionRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const {statsInput, verificationInput, collegeId, programId, status} = input;
+      const {statsInput, verificationInput, collegeId, programId, status, date, term} = input;
 
       const statsResult: Stats = await api.stats.add.mutate(statsInput);
       const verificationResult: Verification = await api.verification.add.mutate(verificationInput);
@@ -106,6 +108,8 @@ export const decisionRouter = createTRPCRouter({
         programId: programId,
         status: status,
         collegeId: collegeId,
+        date: date,
+        term: term
       }
 
       const decision = await ctx.db.decision.create({

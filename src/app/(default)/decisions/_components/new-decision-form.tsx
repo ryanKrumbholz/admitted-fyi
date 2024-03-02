@@ -14,6 +14,8 @@ import { type VerificationInput } from '~/server/model/verification-input';
 import { type StatsInput } from '~/server/model/stats-input';
 import { type DecisionInput } from '~/server/model/decision-input';
 import { Button } from '~/app/_components/button';
+import DatePicker from '~/app/_components/date-picker';
+import { Term } from '~/app/_models/Term';
 
 const NewDecisionForm: React.FC = () => {
   const [formState, setFormState] = useState({
@@ -26,6 +28,8 @@ const NewDecisionForm: React.FC = () => {
     statsDegreeType: undefined,
     verified: false,
     imgUrl: '',
+    date: new Date(),
+    term: undefined
   });
   const [programDegreeType, setProgramDegreeType] = useState<DegreeType>();
   const [selectedCollgeId, setSelectedCollegeId] = useState<number>(0);
@@ -88,7 +92,7 @@ const NewDecisionForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (formState.programId && formState.status && formState.collegeId) {
+    if (formState.programId && formState.status && formState.collegeId && formState.term) {
       const verificationInput: VerificationInput = {
         verified: formState.verified,
         imgUrl: formState.imgUrl,
@@ -113,6 +117,8 @@ const NewDecisionForm: React.FC = () => {
                 programId: formState.programId,
                 status: formState.status,
                 collegeId: formState.collegeId,
+                date: formState.date,
+                term: formState.term
             };
 
             await addDecisionMutation.mutateAsync(decisionInput, {
@@ -125,6 +131,15 @@ const NewDecisionForm: React.FC = () => {
             setIsSubmitting(false);
         }
     }
+};
+
+const handleDateChange = (date: Date | null) => {
+  if (date) {
+  setFormState(prev => ({
+    ...prev,
+    date: date
+  }));
+}
 };
 
   const handleProgramSearchChange = (searchTerm: string) => { setProgramSearch(searchTerm); };
@@ -172,6 +187,23 @@ const NewDecisionForm: React.FC = () => {
      disabled={!selectedCollgeId || !programDegreeType}
 
    />
+
+  <div>
+     <label htmlFor="term" className="block font-bold text-white">Term</label>
+     <select
+       required={true}
+       id="term"
+       name="term"
+       value={formState.status}
+       onChange={handleChange}
+       className='block w-full py-1 bg-surface border-mantle rounded-md  p-2 focus:ring-lavender focus:outline-none'
+     >
+      <option value="" selected disabled hidden>Select status</option>
+       {Object.values(Term).map(term => (
+         <option key={term} value={term}>{term}</option>
+       ))}
+     </select>
+   </div>
  
    <div>
      <label htmlFor="status" className="block font-bold text-white">Status</label>
@@ -189,6 +221,8 @@ const NewDecisionForm: React.FC = () => {
        ))}
      </select>
    </div>
+
+   <DatePicker onChange={handleDateChange}/>
  
    <TextField
      required={true}
