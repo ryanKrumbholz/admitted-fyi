@@ -14,20 +14,20 @@ const ContactPage = () => {
       <div className="mb-4">
         <h2 className="text-2xl font-semibold mb-2">Email Us</h2>
         <p>
-          For general inquiries, please email us at: <a href="mailto:contact@admitted.fyi" className="text-blue-600 hover:underline">info@example.com</a>
+          For general inquiries, please email us at: <a href="mailto:contact@admitted.fyi" className="text-blue-600 hover:underline">contact@admitted.fyi</a>
         </p>
       </div>
-      <div>
+      {/* <div>
         <h2 className="text-2xl font-semibold mb-2">Follow Us</h2>
         <p>
           Stay updated by following us on our social media channels:
         </p>
         <ul className="list-disc pl-6 mt-2">
-          <li><a href="https://twitter.com/yourhandle" className="text-blue-600 hover:underline">Twitter: @YourHandle</a></li>
+          <li><a href="https://twitter.com/admittedfyi" className="text-blue-600 hover:underline">Twitter: @YourHandle</a></li>
           <li><a href="https://reddit.com/yourpage" className="text-blue-600 hover:underline">Reddit: YourPage</a></li>
-          {/* Add other social media links as needed */}
+
         </ul>
-      </div>
+      </div> */}
     </div>
   );
 };
