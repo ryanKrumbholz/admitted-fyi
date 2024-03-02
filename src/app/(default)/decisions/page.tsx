@@ -8,6 +8,7 @@ import { type Decision } from '~/app/_models/Decision';
 import DecisionCard from './_components/decision-card';
 import SearchBar from '~/app/_components/search-bar';
 import { debounce } from 'lodash'; // Assuming lodash is installed for debouncing
+import DecisionCardSkeleton from './_components/skeleton-card';
 
 const DECISIONS_PER_PAGE = 20;
 
@@ -48,11 +49,19 @@ export default function DecisionsPage() {
         <Filters/>
       </div>
       <ul className='w-full max-w-2xl'>
-        {data?.decisions.map((decision) => (
-          <li key={decision.id} className='w-fill'>
-            <DecisionCard decision={decision}/>
-          </li>
-        ))} 
+      {isLoading ? (
+          Array.from({ length: DECISIONS_PER_PAGE }).map((_, index) => (
+            <li key={index} className='w-full'>
+              <DecisionCardSkeleton/>
+            </li>
+          ))
+        ) : (
+          data?.decisions.map((decision) => (
+            <li key={decision.id} className='w-full'>
+              <DecisionCard decision={decision}/>
+            </li>
+          ))
+        )} 
       </ul>
       {data && (
         <Pagination 

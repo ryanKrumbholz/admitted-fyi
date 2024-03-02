@@ -13,12 +13,12 @@ export default async function DefaultLayout({
 
   return (
     <AuthProvider session={session}>
-      <div className="max-w-7xl mx-auto">
+      <div className="flex flex-col min-h-screen max-w-7xl mx-auto">
         <Header/>
-        {children}
-        <div className="py-20">
+        <main className="flex-grow">
+          {children}
+        </main>
           <Footer />
-        </div>
       </div>
     </AuthProvider>
   )
