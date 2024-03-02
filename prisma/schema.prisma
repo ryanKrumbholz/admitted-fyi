@@ -92,6 +92,7 @@ model Decision {
   verificationId String   @unique
   statsId        String   @unique
   term           Term
+  termYearString String
 
   college      College      @relation(fields: [collegeId], references: [id])
   user         User?        @relation(fields: [userId], references: [id])

@@ -109,7 +109,8 @@ export const decisionRouter = createTRPCRouter({
         status: status,
         collegeId: collegeId,
         date: date,
-        term: term
+        term: term,
+        termYearString: `${term} ${date.getFullYear()}`
       }
 
       const decision = await ctx.db.decision.create({
