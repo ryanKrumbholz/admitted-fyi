@@ -1,7 +1,8 @@
-import DecisionsPage from "./decisions/page";
+"use client"
+import { useRouter } from "next/navigation";
 
-export default async function Index() {
-
+export default function Index() {
+    useRouter().push("/decisions")
 return (
- <DecisionsPage/>
+    <></>
 )}

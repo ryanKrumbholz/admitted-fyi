@@ -11,10 +11,10 @@ import { debounce } from 'lodash'; // Assuming lodash is installed for debouncin
 import DecisionCardSkeleton from './_components/skeleton-card';
 import Head from 'next/head';
 
-const DECISIONS_PER_PAGE = 50;
+const DECISIONS_PER_PAGE = 8;
 
 export default function DecisionsPage() {
-  const [pageNumber, setPageNumber] = useState(0);
+  const [pageIndex, setPageIndex] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
 
@@ -32,14 +32,14 @@ export default function DecisionsPage() {
   // Fetching decisions
   const { data, isLoading, isError } = api.decision.feed.useQuery({
     take: DECISIONS_PER_PAGE,
-    skip: pageNumber * DECISIONS_PER_PAGE,
+    skip: pageIndex * DECISIONS_PER_PAGE,
     searchString: debouncedSearchQuery,
   }, {
     keepPreviousData: true,
   });
 
   const handleSearch = useCallback((query: string) => {
-    setPageNumber(0); // Reset pagination on new search
+    setPageIndex(0); // Reset pagination on new search
     setSearchQuery(query);
   }, []);
 
@@ -70,6 +70,7 @@ export default function DecisionsPage() {
           ))
         )} 
       </ul>
+      <Pagination itemCount={data?.decisionCount ?? 0} itemsPerPage={DECISIONS_PER_PAGE} currentPageIndex={pageIndex} onPageChange={setPageIndex}/>
     </main>
     </>
   );
