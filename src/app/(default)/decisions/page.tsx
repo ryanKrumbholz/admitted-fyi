@@ -9,6 +9,7 @@ import DecisionCard from './_components/decision-card';
 import SearchBar from '~/app/_components/search-bar';
 import { debounce } from 'lodash'; // Assuming lodash is installed for debouncing
 import DecisionCardSkeleton from './_components/skeleton-card';
+import Head from 'next/head';
 
 const DECISIONS_PER_PAGE = 20;
 
@@ -43,7 +44,13 @@ export default function DecisionsPage() {
   }, []);
 
   return (
-    <div className="container max-w-4xl mx-auto flex flex-col items-center gap-y-4">
+    <>
+    <Head>
+        <title>Decisions - Admitted.fyi</title>
+        <meta name="description" content="Decisions for Admitted.fyi" />
+  </Head>
+
+    <main className="container max-w-4xl mx-auto flex flex-col items-center gap-y-4">
       <div className='container max-w-2xl mb-8'>
         <SearchBar onSearch={handleSearch}/>
         <Filters/>
@@ -71,6 +78,7 @@ export default function DecisionsPage() {
           onPageChange={setPageNumber} // Assuming Pagination component accepts onPageChange prop
         />
       )}
-    </div>
+    </main>
+    </>
   );
 }
