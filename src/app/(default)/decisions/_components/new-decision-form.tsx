@@ -93,10 +93,6 @@ const NewDecisionForm: React.FC = () => {
     e.preventDefault();
 
     if (formState.programId && formState.status && formState.collegeId && formState.term) {
-      const verificationInput: VerificationInput = {
-        verified: formState.verified,
-        imgUrl: formState.imgUrl,
-    };
         try {
             setIsSubmitting(true);
             const verificationInput: VerificationInput = {

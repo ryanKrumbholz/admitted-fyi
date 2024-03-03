@@ -3,7 +3,7 @@ import Link from "next/link";
 export const Footer = () => {
   const year = new Date().getFullYear();
   return (
-    <footer className="flex flex-col items-center justify-center gap-4 text-sm text-secondary p-4">
+    <footer className="flex flex-col items-center justify-center gap-4 text-sm text-secondary p-4 mt-10 ">
       <div className="flex flex-wrap justify-center gap-4">
         <Link href="/faq" className="hover:underline font-bold">FAQ</Link>
         <Link href="/privacy" className="hover:underline font-bold mr-2">Privacy Policy</Link>

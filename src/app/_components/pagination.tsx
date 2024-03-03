@@ -1,16 +1,17 @@
 import React from 'react'; // Import React
+import { Button } from './button';
 
 type PaginationProps = {
   itemCount: number;
   itemsPerPage: number;
-  currentPageNumber: number;
+  currentPageIndex: number;
   onPageChange: (newPage: number) => void; // New parameter for handling page changes
 };
 
 export const Pagination = ({
   itemCount,
   itemsPerPage,
-  currentPageNumber,
+  currentPageIndex,
   onPageChange,
 }: PaginationProps) => {
   const totalPages = Math.ceil(itemCount / itemsPerPage);
@@ -20,28 +21,27 @@ export const Pagination = ({
   }
 
   const goToPage = (page: number) => {
-    // Prevent going to a page outside of valid range
-    if (page >= 1 && page <= totalPages) {
+    if (page >= 0 && page <= totalPages - 1) {
       onPageChange(page);
     }
   };
 
   return (
     <div className="flex justify-center gap-4 mt-12">
-      <button
-        onClick={() => goToPage(currentPageNumber - 1)}
-        disabled={currentPageNumber === 1}
-        className={`px-4 py-2 border rounded-md ${currentPageNumber === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200'}`}
+      <Button
+        onClick={() => goToPage(currentPageIndex - 1)}
+        disabled={currentPageIndex === 0}
+        className={`px-4 py-2 ${currentPageIndex === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
       >
-        Newer posts
-      </button>
-      <button
-        onClick={() => goToPage(currentPageNumber + 1)}
-        disabled={currentPageNumber === totalPages}
-        className={`px-4 py-2 border rounded-md ${currentPageNumber === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200'}`}
+        Back
+      </Button>
+      <Button
+        onClick={() => goToPage(currentPageIndex + 1)}
+        disabled={currentPageIndex === totalPages}
+        className={`px-4 py-2 ${currentPageIndex === totalPages - 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
       >
-        Older posts
-      </button>
+        Next
+      </Button>
     </div>
   );
 };
