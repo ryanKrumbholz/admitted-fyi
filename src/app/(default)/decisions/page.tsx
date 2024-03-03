@@ -36,7 +36,7 @@ export default function DecisionsPage() {
     searchString: debouncedSearchQuery,
   }, {
     onSuccess: (data) => {
-      setDecisions((prevDecisions) => [...prevDecisions, ...data.decisions]);
+      setDecisions((prevDecisions) => [...new Set([...prevDecisions, ...data.decisions])]);
       setLoading(false);
 
       if (data.decisions.length < DECISIONS_PER_PAGE) {
