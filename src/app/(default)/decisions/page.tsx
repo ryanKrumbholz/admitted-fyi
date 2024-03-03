@@ -23,7 +23,7 @@ export default function DecisionsPage() {
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearchQuery(searchQuery);
-      setPageNumber(0);
+      setPageNumber(1);
       setDecisions([]);
       setHasMore(true);
     }, 500);
