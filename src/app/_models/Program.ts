@@ -1,10 +1,10 @@
 import { type College } from "./College";
 
 export interface Program {
-    id: number;
-    collegeId: number;
+    id?: number;
+    collegeId?: number;
     name: string;
     degreeType: string;
-    department: string | null;
+    department?: string | null;
     college: College
   }

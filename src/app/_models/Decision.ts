@@ -8,12 +8,12 @@ import { type Verification } from "./Verification";
 
 export interface Decision {
   id: string;
-  userId: string | null;
-  statsId: string;
-  programId: number;
+  userId?: string | null;
+  statsId?: string;
+  programId?: number;
   status:`${Status}`;
   date: Date;
-  verificationId: string;
+  verificationId?: string;
   user?: User;
   program: Program;
   stats: Stats

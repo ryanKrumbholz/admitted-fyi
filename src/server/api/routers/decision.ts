@@ -11,14 +11,31 @@ export const decisionRouter = createTRPCRouter({
     .input(
       z.string()
     ).query(async ({ ctx, input }) => {
-      return await ctx.db.decision.findUniqueOrThrow({where:  {id: input},  include: {
+      return await ctx.db.decision.findUniqueOrThrow({where:  {id: input}, select: {
+        id: true,
+        date: true,
+        termYearString: true,
+        status: true,
         program: {
-          include: {
-            college: true, // Ensure college data is included for the program
+          select: {
+            name: true,
+            degreeType: true,
+            college: {
+              select: {name: true}
+            }
           },
         },
-        verification: true,
-        stats: true
+        verification: {
+          select: {
+            verified: true
+           }
+        },
+        stats: {
+          select: {
+            gpa: true,
+            residency: true,
+          }
+        }
       },})
     }),
   feed: publicProcedure
@@ -64,14 +81,31 @@ export const decisionRouter = createTRPCRouter({
         orderBy: {
           date: 'desc',
         },
-        include: {
+        select: {
+          id: true,
+          date: true,
+          termYearString: true,
+          status: true,
           program: {
-            include: {
-              college: true, // Ensure college data is included for the program
+            select: {
+              name: true,
+              degreeType: true,
+              college: {
+                select: {name: true}
+              }
             },
           },
-          verification: true,
-          stats: true
+          verification: {
+            select: {
+             verified: true
+            }
+          },
+          stats: {
+            select: {
+              gpa: true,
+              residency: true,
+            }
+          }
         },
       })
 

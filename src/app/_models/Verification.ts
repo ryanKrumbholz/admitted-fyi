@@ -1,8 +1,7 @@
 export interface Verification {
-    id: string;
+    id?: string;
     verified: boolean;
-    imgUrl: string;
+    imgUrl?: string;
     userId?: string | null;
     programId?: number;
-    // Decision relation omitted for brevity
   }

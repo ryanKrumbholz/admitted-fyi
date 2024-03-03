@@ -44,7 +44,7 @@ const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
                     </div>
                 )}
             </div>
-            {decision.verificationId && decision.verification.verified && (
+            {decision.verification.verified && (
                 <div className="flex items-center justify-center w-8 sm:w-10 rounded-full mt-2 sm:mt-auto ml-auto">
                     <p className="mr-2 text-xs sm:text-sm">Verified</p>
                     <div className="flex items-center justify-center w-8 sm:w-10 h-8 sm:h-10 rounded-full hidden sm:flex">
