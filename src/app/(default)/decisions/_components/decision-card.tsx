@@ -24,7 +24,7 @@ const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
         >
             <div className="flex-grow">
                 <h5 className="mb-2 text-lg sm:text-2xl font-bold tracking-tight text-text dark:text-text">
-                    {`${decision.program.name}, ${decision.program.college.name}`}
+                    {`${decision.program.name}, ${decision.program.degreeType}, ${decision.program.college.name}`}
                 </h5>
                 <p className="font-normal text-xs sm:text-sm text-subtext dark:text-subtext">
                     Decision Date: {formattedDate}
