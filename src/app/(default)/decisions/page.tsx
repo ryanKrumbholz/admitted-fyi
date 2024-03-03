@@ -13,7 +13,7 @@ const DECISIONS_PER_PAGE = 50;
 
 export default function DecisionsPage() {
   const [decisions, setDecisions] = useState<Decision[]>([]);
-  const [pageNumber, setPageNumber] = useState(1);
+  const [pageNumber, setPageNumber] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
   const [loading, setLoading] = useState(false);
