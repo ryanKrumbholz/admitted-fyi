@@ -9,7 +9,7 @@ import DecisionCardSkeleton from './_components/skeleton-card';
 import Head from 'next/head';
 import { type Decision } from '~/app/_models/Decision';
 
-const DECISIONS_PER_PAGE = 8;
+const DECISIONS_PER_PAGE = 50;
 
 export default function DecisionsPage() {
   const [decisions, setDecisions] = useState<Decision[]>([]);
