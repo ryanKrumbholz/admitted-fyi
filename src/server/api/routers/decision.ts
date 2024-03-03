@@ -7,6 +7,20 @@ import { getServerSession } from 'next-auth';
 import { genHeadlessUserId } from '~/app/_util/user';
 
 export const decisionRouter = createTRPCRouter({
+  get: publicProcedure
+    .input(
+      z.string()
+    ).query(async ({ ctx, input }) => {
+      return await ctx.db.decision.findUniqueOrThrow({where:  {id: input},  include: {
+        program: {
+          include: {
+            college: true, // Ensure college data is included for the program
+          },
+        },
+        verification: true,
+        stats: true
+      },})
+    }),
   feed: publicProcedure
     .input(
       z

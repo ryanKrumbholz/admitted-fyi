@@ -1,4 +1,5 @@
 import React from "react";
+import { useRouter } from 'next/navigation'
 import { type Decision } from "~/app/_models/Decision";
 
 interface DecisionCardProps {
@@ -6,6 +7,7 @@ interface DecisionCardProps {
 }
 
 const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
+    const router = useRouter();
     const formattedDate = decision.date.toLocaleDateString("en-US", {
         year: 'numeric', month: 'long', day: 'numeric'
     });
@@ -16,7 +18,10 @@ const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
     };
 
     return (
-        <div className="flex flex-col sm:flex-row min-w-full min-h-56 p-2 sm:p-3 bg-base border-l-4 dark:bg-surface dark:border-lavender justify-between mb-4 sm:mb-7">
+        <div 
+        className="flex flex-col sm:flex-row min-w-full min-h-56 p-2 sm:p-3 bg-base border-l-4 dark:bg-surface dark:border-lavender justify-between mb-4 sm:mb-7"
+        onClick={() => router.push(`/decisions/${decision.id}`)}
+        >
             <div className="flex-grow">
                 <h5 className="mb-2 text-lg sm:text-2xl font-bold tracking-tight text-text dark:text-text">
                     {`${decision.program.name}, ${decision.program.college.name}`}
