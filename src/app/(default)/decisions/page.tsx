@@ -9,11 +9,11 @@ import DecisionCardSkeleton from './_components/skeleton-card';
 import Head from 'next/head';
 import { type Decision } from '~/app/_models/Decision';
 
-const DECISIONS_PER_PAGE = 50;
+const DECISIONS_PER_PAGE = 5;
 
 export default function DecisionsPage() {
   const [decisions, setDecisions] = useState<Decision[]>([]);
-  const [pageNumber, setPageNumber] = useState(0);
+  const [pageNumber, setPageNumber] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
   const [loading, setLoading] = useState(false);
