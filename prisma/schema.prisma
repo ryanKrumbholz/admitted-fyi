@@ -32,6 +32,7 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId]) // Added index for userId relation
 }
 
 model Session {
@@ -41,7 +42,7 @@ model Session {
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([userId])
+  @@index([userId]) // Confirming existing index
 }
 
 model User {
@@ -55,7 +56,9 @@ model User {
   userPreferences  UserPreference[]
   decisions        Decision[]
   resident         Boolean
-  programWatchList Program[]        @relation("ProgramWatchList") // Adjusted for many-to-many
+  programWatchList Program[]        @relation("ProgramWatchList")
+
+  // No additional indexes required here as the primary relations are covered
 }
 
 model College {
@@ -64,6 +67,7 @@ model College {
   url       String?
   programs  Program[]
   decisions Decision[]
+  // No additional indexes needed as there are no scalar fields for relations that aren't covered by relations
 
   @@fulltext([name])
 }
@@ -78,7 +82,7 @@ model Program {
   decisions  Decision[]
   watchers   User[]     @relation("ProgramWatchList")
 
-  @@index([collegeId, degreeType])
+  @@index([collegeId, degreeType]) // Confirming existing index
   @@fulltext([name])
 }
 
@@ -99,6 +103,8 @@ model Decision {
   program      Program      @relation(fields: [programId], references: [id])
   stats        Stats        @relation(fields: [statsId], references: [id])
   verification Verification @relation(fields: [verificationId], references: [id])
+
+  @@index([userId, collegeId, programId, statsId, verificationId]) // Added indexes for relation fields
 }
 
 model Verification {
@@ -106,6 +112,8 @@ model Verification {
   verified Boolean
   imgUrl   String
   decision Decision?
+
+  // No indexes added here as there are no scalar fields for relations that aren't covered by relations
 }
 
 model UserPreference {
@@ -114,6 +122,8 @@ model UserPreference {
   preferenceType  String
   preferenceValue String
   user            User   @relation(fields: [userId], references: [id])
+
+  @@index([userId]) // Added index for userId relation
 }
 
 model Stats {
@@ -122,6 +132,8 @@ model Stats {
   degreeType DegreeType?
   decision   Decision?
   residency  Residency?
+
+  // No additional indexes required as there are no scalar fields for relations
 }
 
 enum Status {
@@ -159,4 +171,5 @@ enum DegreeType {
   DVM // Doctor of Veterinary Medicine
   LLB // Bachelor of Laws
   LLM // Master of Laws
+  PsyD
 }

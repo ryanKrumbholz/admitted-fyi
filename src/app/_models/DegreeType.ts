@@ -12,5 +12,6 @@ export enum DegreeType {
     DDS = "DDS", // Doctor of Dental Surgery
     DVM = "DVM", // Doctor of Veterinary Medicine
     LLM = "LLM", // Master of Laws
+    PsyD = "PsyD"
 }
   
