@@ -13,30 +13,29 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
 
   const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // Prevent form submission from reloading the page
-    onSearch(searchQuery);
+    onSearch(searchQuery); // Invoke the provided onSearch function with the current search query
   };
 
   return (
     <form onSubmit={handleSearch} className="flex min-w-full items-center">
-  <div className="flex flex-grow">
-    <TextField
-      label="Search"
-      id="search"
-      name="search"
-      placeholder="Search ex. Duke, Biostatistics, ..."
-      value={searchQuery}
-      onChange={(e) => setSearchQuery(e.target.value)}
-      className="min-w-full" // Make TextField as wide as its container
-    />
-  </div>
-  <Button
-    type="submit"
-    className="flex items-center rounded-sm ml-1 mt-8"
-  >
-    Search
-  </Button>
-</form>
-
+      <div className="flex flex-grow">
+        <TextField
+          label="Search"
+          id="search"
+          name="search"
+          placeholder="Search ex. Duke, Biostatistics, ..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="min-w-full" // Make TextField as wide as its container
+        />
+      </div>
+      <Button
+        type="submit"
+        className="flex items-center rounded-sm ml-1 mt-8"
+      >
+        Search
+      </Button>
+    </form>
   );
 };
 

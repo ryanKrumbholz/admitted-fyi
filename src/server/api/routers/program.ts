@@ -2,7 +2,6 @@ import { TRPCError } from '@trpc/server';
 import { createTRPCRouter, internalProcedure, publicProcedure } from '../trpc';
 import { z } from 'zod';
 import { DegreeType } from '~/app/_models/DegreeType';
-import { strictEqual } from 'assert';
 
 export const programRouter = createTRPCRouter({
   list: publicProcedure
@@ -19,13 +18,13 @@ export const programRouter = createTRPCRouter({
       const { take = 50, skip, searchString, collegeId, degreeType } = input ?? {};
 
       const where = {
-        ...(searchString && { 
-          name: { startsWith: searchString }, // Filter by name starting with searchString
-        }),
-        collegeId, // Directly use collegeId for filtering
-        degreeType, // Filter by degreeType
+        AND: [
+          searchString ? {
+            name: { startsWith: searchString },
+          } : {},
+          { collegeId, degreeType },
+        ],
       };
-
 
       const programs = await ctx.db.program.findMany({
         take,
@@ -37,11 +36,8 @@ export const programRouter = createTRPCRouter({
         orderBy: { name: 'asc' },
       });
 
-      const programCount = await ctx.db.program.count({ where });
-
       return {
         programs,
-        programCount,
       };
     }),
 });

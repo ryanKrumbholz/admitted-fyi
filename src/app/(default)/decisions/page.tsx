@@ -1,13 +1,11 @@
 'use client'
 
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Pagination } from '../../_components/pagination';
 import Filters from './_components/filter-bar';
 import { api } from '~/trpc/react';
-import { type Decision } from '~/app/_models/Decision';
 import DecisionCard from './_components/decision-card';
 import SearchBar from '~/app/_components/search-bar';
-import { debounce } from 'lodash'; // Assuming lodash is installed for debouncing
 import DecisionCardSkeleton from './_components/skeleton-card';
 import Head from 'next/head';
 
@@ -18,22 +16,11 @@ export default function DecisionsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
 
-  // Debounce searchQuery updates
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedSearchQuery(searchQuery);
-    }, 500); // Adjust debounce time as needed
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [searchQuery]);
-
   // Fetching decisions
   const { data, isLoading, isError } = api.decision.feed.useQuery({
     take: DECISIONS_PER_PAGE,
     skip: pageIndex * DECISIONS_PER_PAGE,
-    searchString: debouncedSearchQuery,
+    searchString: searchQuery,
   }, {
     keepPreviousData: true,
   });

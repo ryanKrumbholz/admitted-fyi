@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
+import { debounce } from 'lodash';
 import { Status } from '~/app/_models/Status';
 import { DegreeType } from '~/app/_models/DegreeType';
 import { api } from '~/trpc/react';
@@ -137,8 +138,8 @@ const handleDateChange = (date: Date | null) => {
 }
 };
 
-  const handleProgramSearchChange = (searchTerm: string) => { setProgramSearch(searchTerm); };
-  const handleCollegeSearchChange = (searchTerm: string) => { setCollegeSearch(searchTerm); };
+  const handleProgramSearchChange = debounce(setProgramSearch, 100);
+  const handleCollegeSearchChange = debounce(setCollegeSearch, 100);
 
   return (
    <form onSubmit={handleSubmit} className="container max-w-full space-y-4 bg-base text-mantle rounded-lg p-4">
