@@ -138,8 +138,8 @@ const handleDateChange = (date: Date | null) => {
 }
 };
 
-  const handleProgramSearchChange = debounce(setProgramSearch, 100);
-  const handleCollegeSearchChange = debounce(setCollegeSearch, 100);
+  const handleProgramSearchChange = debounce(setProgramSearch, 300);
+  const handleCollegeSearchChange = debounce(setCollegeSearch, 300);
 
   return (
    <form onSubmit={handleSubmit} className="container max-w-full space-y-4 bg-base text-mantle rounded-lg p-4">
