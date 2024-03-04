@@ -35,11 +35,8 @@ export const collegeRouter = createTRPCRouter({
         },
       });
 
-      const collegeCount = await ctx.db.college.count({ where });
-
       return {
-        colleges,
-        collegeCount,
+        colleges
       };
     }),
 
