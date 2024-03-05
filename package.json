@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev & npm run start-db",
+    "dev": "npm run start-db & next dev",
     "build": "next build",
     "start": "next start",
     "start-db": "docker-compose up -d",
