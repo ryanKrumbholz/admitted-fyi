@@ -8,13 +8,14 @@ Admitted.fyi is a dynamic US graduate application database and tracking tool tha
 To get Admitted.fyi up and running in your local environment, follow these steps. This project is built with Next.js and uses pnpm for package management, with a database powered by PlanetScale.
 
 ### Prerequisites
-- Node.js (version X.X or higher)
+- Node.js (version 18 or higher)
 - pnpm
+- Docker
 
 ### Setup
 1. Clone the repository to your local machine:
    ```bash
-   git clone https://github.com/yourusername/admitted-fyi.git
+   git clone https://github.com/rkrumbholz/admitted-fyi.git
    ```
 2. Navigate to the project directory:
    ```bash
@@ -24,8 +25,6 @@ To get Admitted.fyi up and running in your local environment, follow these steps
    ```bash
    pnpm install
    ```
-4. Set up your PlanetScale database (provide specific instructions or link to documentation).
-
 5. Start the development server:
    ```bash
    pnpm run dev
@@ -51,5 +50,5 @@ For more information and resources related to the tooling and technologies used 
 - [Next.js Documentation](https://nextjs.org/docs)
 - [PlanetScale Documentation](https://docs.planetscale.com/)
 - [pnpm](https://pnpm.io/)
+- [docker](https://docs.docker.com/)
 
-(Placeholder for more specific links to resources and related tooling)
