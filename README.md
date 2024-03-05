@@ -51,3 +51,4 @@ For more information and resources related to the tooling and technologies used 
 - [PlanetScale Documentation](https://docs.planetscale.com/)
 - [pnpm](https://pnpm.io/)
 - [docker](https://docs.docker.com/)
+
