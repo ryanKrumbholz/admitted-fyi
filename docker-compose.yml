@@ -1,0 +1,17 @@
+
+version: '3.8'
+services:
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: my-secret-pw
+      MYSQL_DATABASE: admittedfyi
+    ports:
+      - "3306:3306"
+    volumes:
+      - my-db-volume:/var/lib/mysql
+      - ./.pscale/seed-data:/docker-entrypoint-initdb.d
+    restart: always
+
+volumes:
+  my-db-volume:

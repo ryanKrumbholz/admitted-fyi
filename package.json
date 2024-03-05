@@ -4,14 +4,23 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "dev": "next dev & npm run start-db",
     "build": "next build",
-    "db:push": "prisma db push",
-    "db:studio": "prisma studio",
-    "dev": "next dev",
+    "start": "next start",
+    "start-db": "docker-compose up -d",
+    "stop-db": "docker-compose down",
+    "prisma:dev": "cross-env NODE_ENV=development prisma migrate dev",
+    "prisma:push": "cross-env NODE_ENV=development prisma db push",
+    "prisma:studio": "cross-env NODE_ENV=development prisma studio",
+    "docker:build": "docker-compose build",
+    "lint": "next lint",
     "generate:svg": "npx @svgr/cli --no-index --out-dir src/app/_svg -- src/svg",
     "postinstall": "prisma generate",
-    "lint": "next lint",
-    "start": "next start"
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": "eslint --cache --fix",
+    "*.{css,scss,html}": "stylelint --fix"
   },
   "dependencies": {
     "@next-auth/prisma-adapter": "^1.0.7",
@@ -38,6 +47,7 @@
     "clsx": "^2.0.0",
     "cmdk": "^0.2.0",
     "date-fns": "^2.30.0",
+    "dotenv": "^16.4.5",
     "gemoji": "^8.1.0",
     "isomorphic-dompurify": "^1.10.0",
     "jsdom": "^23.0.1",
@@ -87,11 +97,15 @@
     "@typescript-eslint/eslint-plugin": "^6.11.0",
     "@typescript-eslint/parser": "^6.11.0",
     "autoprefixer": "^10.4.14",
+    "cross-env": "^7.0.3",
     "eslint": "^8.54.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
     "postcss": "^8.4.31",
     "prettier": "^3.1.0",
     "prettier-plugin-tailwindcss": "^0.5.7",
     "prisma": "^5.6.0",
+    "shx": "^0.3.4",
     "tailwindcss": "^3.3.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.1.6"
