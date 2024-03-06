@@ -1,7 +1,7 @@
 CREATE TABLE `Verification` (
 	`id` varchar(191) NOT NULL,
 	`verified` tinyint(1) NOT NULL,
-	`imgUrl` varchar(191) NOT NULL,
+	`imgUrl` varchar(191),
 	PRIMARY KEY (`id`)
 ) ENGINE InnoDB,
   CHARSET utf8mb4,
