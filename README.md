@@ -24,6 +24,7 @@ To get Admitted.fyi up and running in your local environment, follow these steps
 3. Install dependencies using pnpm:
    ```bash
    pnpm install
+4. Make sure docker is installed and running!
    ```
 5. Start the development server:
    ```bash

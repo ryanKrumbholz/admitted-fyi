@@ -110,7 +110,7 @@ model Decision {
 model Verification {
   id       String    @id @default(cuid())
   verified Boolean
-  imgUrl   String
+  imgUrl   String?
   decision Decision?
 
   // No indexes added here as there are no scalar fields for relations that aren't covered by relations
