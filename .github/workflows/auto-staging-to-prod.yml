@@ -23,10 +23,10 @@ jobs:
     needs: build-and-test
     runs-on: ubuntu-latest
     steps:
-      - name: Wait for 4 hours
+      - name: Wait for 30 mins
         uses: jakejarvis/wait-action@master
         with:
-          time: '4h'
+          time: '30m'
           continue-on-error: true
           
 
