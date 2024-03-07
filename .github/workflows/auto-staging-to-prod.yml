@@ -1,0 +1,47 @@
+name: Staging to Production Promotion
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build-and-test:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+        - name: Set up Node.js
+          uses: actions/setup-node@v2
+          with:
+            node-version: '14'
+        - name: Install dependencies
+          run: npm install
+        - name: Run integration tests
+          run: npm test
+          
+  delay:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for 4 hours
+        uses: jakejarvis/wait-action@master
+        with:
+          time: '4h'
+          continue-on-error: true
+          
+
+  auto-merge:
+    needs: delay
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # Necessary for history comparison
+      - name: Merge staging into production
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@github.com'
+          git checkout main
+          git merge --ff-only develop
+          git push origin main

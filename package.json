@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "npm run start-db & next dev",
     "build": "next build",
+    "test": "",
     "start": "next start",
     "start-db": "docker-compose up -d",
     "stop-db": "docker-compose down",
