@@ -5,7 +5,7 @@
 Admitted.fyi is a dynamic US graduate application database and tracking tool that leverages the power of crowd-sourced information to help prospective students navigate the admissions process. With Admitted.fyi, users can access a wealth of admissions results to gain insights into application trends, acceptance rates, and more, making the graduate application journey more transparent and informed.
 
 ## Installation Instructions
-To get Admitted.fyi up and running in your local environment, follow these steps. This project is built with Next.js and uses pnpm for package management, with a database powered by PlanetScale.
+To get Admitted.fyi up and running in your local environment, follow these steps. This project is built with Next.js and uses pnpm for package management, with a database powered by a mySQL database.
 
 ### Prerequisites
 - Node.js (version 18 or higher)
@@ -25,7 +25,6 @@ To get Admitted.fyi up and running in your local environment, follow these steps
    ```bash
    pnpm install
 4. Make sure docker is installed and running!
-   ```
 5. Start the development server:
    ```bash
    pnpm run dev
@@ -33,7 +32,7 @@ To get Admitted.fyi up and running in your local environment, follow these steps
 6. Open `http://localhost:3000` in your browser to view the application.
 
 ## How to Contribute
-We welcome contributions from the community! If you're interested in helping Admitted.fyi grow, please review our contribution guidelines (placeholder for detailed guidelines). Whether you're fixing bugs, adding new features, or improving documentation, your help is appreciated.
+See our [contributing](https://github.com/ryanKrumbholz/admitted-fyi/CONTRIBUTING.md) guidelines for how to contribute to Admitted.fyi.
 
 ## License
 Admitted.fyi is released under a non-commercial open source license. For more details, see the LICENSE file in the repository.
