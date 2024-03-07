@@ -6,15 +6,15 @@ interface AddDecisionButtonLinkProps {
   currentPath: string
 }
 
-export const AddDecisionButtonLink: React.FC<AddDecisionButtonLinkProps> = ({currentPath}) => {
+export const AddDecisionButtonLink: React.FC<AddDecisionButtonLinkProps> = ({ currentPath }) => {
   if (currentPath === '/decisions/add') {
     return null;
   }
   return (
-      <Link href="/decisions/add" passHref>
-        <Button>
-          Add Decision
-        </Button>
-      </Link>
+    <Link href="/decisions/add" passHref>
+      <Button className='sm:text-base text-xs'>
+        Add Decision
+      </Button>
+    </Link>
   );
 };
