@@ -15,7 +15,7 @@ To get Admitted.fyi up and running in your local environment, follow these steps
 ### Setup
 1. Clone the repository to your local machine:
    ```bash
-   git clone https://github.com/rkrumbholz/admitted-fyi.git
+   git clone https://github.com/ryankrumbholz/admitted-fyi.git
    ```
 2. Navigate to the project directory:
    ```bash
