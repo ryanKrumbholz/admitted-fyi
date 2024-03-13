@@ -58,11 +58,11 @@ export const decisionRouter = createTRPCRouter({
         userId,
         programId, 
         status,
+        visibility: Visibility.VISIBLE,
         OR: searchString ? [
           { program: { name: { contains: searchString} } },
           { program: { college: { name: { contains: searchString } } } },
-        ] : undefined,
-        visibility: Visibility.VISIBLE
+        ] : undefined
       };
 
       if (userId) {
