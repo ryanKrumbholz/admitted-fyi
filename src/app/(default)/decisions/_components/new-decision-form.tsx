@@ -109,7 +109,6 @@ const NewDecisionForm: React.FC = () => {
 
   const handleNewProgramChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    console.log(name, value)
     setAddProgramForm(prevState => ({ ...prevState, [name]: value }));
   };
 
