@@ -19,6 +19,9 @@ import DatePicker from '~/app/_components/date-picker';
 import { Term } from '~/app/_models/Term';
 import { Residency } from '~/app/_models/Residency';
 
+const ADD_PROGRAM_OPTION = "Add Program";
+const NEW_PROGRAM_OPTION = {label: ADD_PROGRAM_OPTION, value: -1}
+
 const NewDecisionForm: React.FC = () => {
   const [addProgramForm, setAddProgramForm] = useState({
     name: undefined,
@@ -43,12 +46,10 @@ const NewDecisionForm: React.FC = () => {
   const [selectedCollgeId, setSelectedCollegeId] = useState<number>(0);
   const [programSearch, setProgramSearch] = useState('');
   const [collegeSearch, setCollegeSearch] = useState('');
-  const [programs, setPrograms] = useState<Program[]>([]);
+  const [programs, setPrograms] = useState([NEW_PROGRAM_OPTION]);
   const [colleges, setColleges] = useState<College[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [addProgramOptionSelected, setAddProgramOptionSelected] = useState(false);
-
-  const addProgramOption = "Add Program";
 
   const router = useRouter();
 
@@ -58,8 +59,10 @@ const NewDecisionForm: React.FC = () => {
   const { data: collegeData } = api.college.list.useQuery({ searchString: collegeSearch }, { enabled: !!collegeSearch });
 
   useEffect(() => {
-    if (programData) {
-      setPrograms(programData.programs);
+    if (programData?.programs) {
+      const newProgramOptions = programData.programs.map(p => ({ label: p.name, value: p.id }));
+      newProgramOptions.push(NEW_PROGRAM_OPTION);
+      setPrograms(newProgramOptions);
     }
   }, [programData]);
 
@@ -70,7 +73,7 @@ const NewDecisionForm: React.FC = () => {
   }, [collegeData]);
 
   const handleProgramSelected = (option: { label: string; value: string | number }) => {
-    if (option.label === addProgramOption) {
+    if (option.label === ADD_PROGRAM_OPTION) {
       setAddProgramOptionSelected(true);
     } else {
       setAddProgramOptionSelected(false);
@@ -201,7 +204,7 @@ const handleDateChange = (date: Date | null) => {
      placeholder='Begin typing and select a program...'
      id='program-dropdown'
      name='program'
-     options={programData?.programs.map(p => ({ label: p.name, value: p.id })).push({label: addProgramOption, value: -1}) ?? [{label: addProgramOption, value: -1}]}
+     options={programs}
      onOptionSelected={handleProgramSelected}
      onSearch={handleProgramSearchChange}
      disabled={!selectedCollgeId || !programDegreeType}
