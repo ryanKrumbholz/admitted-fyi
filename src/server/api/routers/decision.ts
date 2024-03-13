@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server'
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc'
 import { z } from 'zod'
-import { Status, type Stats, type Verification, DegreeType, Term, Residency } from '@prisma/client';
+import { Status, type Stats, type Verification, DegreeType, Term, Residency, Visibility } from '@prisma/client';
 import { api } from '~/trpc/server';
 import { getServerSession } from 'next-auth';
 import { genHeadlessUserId } from '~/app/_util/user';
@@ -121,7 +121,7 @@ export const decisionRouter = createTRPCRouter({
     .input(
       z.object({
         programId: z.number().int(),
-        newProgram: z.object({
+        newProgramInput: z.object({
           degreeType: z.nativeEnum(DegreeType),
           department: z.string().optional(),
           name: z.string(),
@@ -145,7 +145,7 @@ export const decisionRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const {statsInput, verificationInput, collegeId, status, date, term, newProgram} = input;
+      const {statsInput, verificationInput, collegeId, status, date, term, newProgramInput} = input;
       let {programId} = input;
 
       const statsResult: Stats = await api.stats.add.mutate(statsInput);
@@ -156,12 +156,18 @@ export const decisionRouter = createTRPCRouter({
       const statsId = statsResult.id;
       const userId = session?.user ? session.user.id : genHeadlessUserId();
 
-      if (programId === -1 && newProgram) {
-        const response = await api.program.add.mutate({
-          collegeId: collegeId,
-          ...newProgram
-        });
-        programId = response.id;
+      let visibility: Visibility = Visibility.VISIBLE;
+      if (programId === -1) {
+        visibility = Visibility.NEEDS_REVIEW;
+        if (newProgramInput) {
+          const response = await api.program.add.mutate({
+            collegeId: collegeId,
+            ...newProgramInput
+          });
+          programId = response.id;
+        } else {
+          throw new Error("Malformed new program input");
+        }
       }
 
       const data = {
@@ -173,7 +179,8 @@ export const decisionRouter = createTRPCRouter({
         collegeId: collegeId,
         date: date,
         term: term,
-        termYearString: `${term} ${date.getFullYear()}`
+        termYearString: `${term} ${date.getFullYear()}`,
+        visibility: visibility
       }
 
       const decision = await ctx.db.decision.create({

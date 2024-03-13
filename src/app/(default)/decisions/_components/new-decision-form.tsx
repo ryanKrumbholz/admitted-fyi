@@ -24,14 +24,13 @@ const NEW_PROGRAM_OPTION = {label: ADD_PROGRAM_OPTION, value: -1}
 
 const NewDecisionForm: React.FC = () => {
   const [addProgramForm, setAddProgramForm] = useState({
-    name: undefined,
-    degreeType: undefined,
-    department: undefined,
-    url: undefined
+    name: '',
+    degreeType: DegreeType.BA,
+    department: '',
+    url: ''
   })
   const [formState, setFormState] = useState({
     programId: 0,
-    newProgram: addProgramForm,
     collegeId: 0,
     status: undefined,
     gpa: undefined,
@@ -137,6 +136,7 @@ const NewDecisionForm: React.FC = () => {
             const decisionInput: DecisionInput = {
                 statsInput: statsInput,
                 verificationInput: verificationInput,
+                newProgramInput: addProgramForm,
                 programId: formState.programId,
                 status: formState.status,
                 collegeId: formState.collegeId,
