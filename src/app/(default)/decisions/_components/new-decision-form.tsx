@@ -221,7 +221,7 @@ const handleDateChange = (date: Date | null) => {
         label='Program Name'
         id="programName"
         name="name"
-        placeholder='Creative Writing and Screenwriting'
+        placeholder='ex. Creative Writing and Screenwriting'
         value={addProgramForm.name}
         onChange={handleNewProgramChange}
         className="w-full py-1 bg-surface border-mantle rounded-md p-2 focus:ring-lavender focus:outline-none"
@@ -231,7 +231,7 @@ const handleDateChange = (date: Date | null) => {
         label='Program URL'
         id="programUrl"
         name="url"
-        placeholder='www.uw.edu/creative-writing'
+        placeholder='ex. www.uw.edu/creative-writing'
         value={addProgramForm.url}
         onChange={handleNewProgramChange}
         className="w-full py-1 bg-surface border-mantle rounded-md p-2 focus:ring-lavender focus:outline-none"
@@ -241,7 +241,7 @@ const handleDateChange = (date: Date | null) => {
         label='Department (optional)'
         id="programDepartment"
         name="department"
-        placeholder='www.uw.edu/creative-writing'
+        placeholder='ex. English'
         value={addProgramForm.department}
         onChange={handleNewProgramChange}
         className="w-full py-1 bg-surface border-mantle rounded-md p-2 focus:ring-lavender focus:outline-none"
