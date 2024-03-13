@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server'
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc'
 import { z } from 'zod'
-import { Status, Stats, Verification, DegreeType, Term, Residency } from '@prisma/client';
+import { Status, type Stats, type Verification, DegreeType, Term, Residency } from '@prisma/client';
 import { api } from '~/trpc/server';
 import { getServerSession } from 'next-auth';
 import { genHeadlessUserId } from '~/app/_util/user';
@@ -121,6 +121,12 @@ export const decisionRouter = createTRPCRouter({
     .input(
       z.object({
         programId: z.number().int(),
+        newProgram: z.object({
+          degreeType: z.nativeEnum(DegreeType),
+          department: z.string().optional(),
+          name: z.string(),
+          url: z.string()
+        }).optional(),
         status: z.nativeEnum(Status),
         collegeId: z.number().int(),
         date: z.date(),
@@ -139,7 +145,8 @@ export const decisionRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const {statsInput, verificationInput, collegeId, programId, status, date, term} = input;
+      const {statsInput, verificationInput, collegeId, status, date, term, newProgram} = input;
+      let {programId} = input;
 
       const statsResult: Stats = await api.stats.add.mutate(statsInput);
       const verificationResult: Verification = await api.verification.add.mutate(verificationInput);
@@ -148,6 +155,14 @@ export const decisionRouter = createTRPCRouter({
       const verificationId = verificationResult.id;
       const statsId = statsResult.id;
       const userId = session?.user ? session.user.id : genHeadlessUserId();
+
+      if (programId === -1 && newProgram) {
+        const response = await api.program.add.mutate({
+          collegeId: collegeId,
+          ...newProgram
+        });
+        programId = response.id;
+      }
 
       const data = {
         userId: userId,

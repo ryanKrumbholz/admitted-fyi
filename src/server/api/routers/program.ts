@@ -1,9 +1,24 @@
 import { TRPCError } from '@trpc/server';
 import { createTRPCRouter, internalProcedure, publicProcedure } from '../trpc';
 import { z } from 'zod';
-import { DegreeType } from '~/app/_models/DegreeType';
+import { DegreeType } from '@prisma/client';
 
 export const programRouter = createTRPCRouter({
+  add: publicProcedure
+  .input(
+    z.object({
+      collegeId: z.number(),
+      degreeType: z.nativeEnum(DegreeType),
+      department: z.string().optional(),
+      name: z.string(),
+      url: z.string()
+    })
+  ).mutation(async ({ ctx, input }) => {
+    const response = await ctx.db.program.create({
+      data: input
+    });
+    return response
+  }),
   list: publicProcedure
     .input(
       z.object({

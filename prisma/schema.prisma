@@ -81,6 +81,8 @@ model Program {
   college    College    @relation(fields: [collegeId], references: [id])
   decisions  Decision[]
   watchers   User[]     @relation("ProgramWatchList")
+  verified   Boolean    @default(false)
+  url        String?
 
   @@index([collegeId, degreeType]) // Confirming existing index
   @@fulltext([name])
@@ -103,6 +105,7 @@ model Decision {
   program      Program      @relation(fields: [programId], references: [id])
   stats        Stats        @relation(fields: [statsId], references: [id])
   verification Verification @relation(fields: [verificationId], references: [id])
+  visibility   Visibility   @default(VISIBLE)
 
   @@index([userId, collegeId, programId, statsId, verificationId]) // Added indexes for relation fields
 }
@@ -172,4 +175,12 @@ enum DegreeType {
   LLB // Bachelor of Laws
   LLM // Master of Laws
   PsyD
+}
+
+enum Visibility {
+  HIDDEN
+  DRAFT
+  VISIBLE
+  NEEDS_REVIEW
+  DELETED
 }

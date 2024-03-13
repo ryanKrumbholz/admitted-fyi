@@ -20,8 +20,15 @@ import { Term } from '~/app/_models/Term';
 import { Residency } from '~/app/_models/Residency';
 
 const NewDecisionForm: React.FC = () => {
+  const [addProgramForm, setAddProgramForm] = useState({
+    name: undefined,
+    degreeType: undefined,
+    department: undefined,
+    url: undefined
+  })
   const [formState, setFormState] = useState({
     programId: 0,
+    newProgram: addProgramForm,
     collegeId: 0,
     status: undefined,
     gpa: undefined,
@@ -39,6 +46,9 @@ const NewDecisionForm: React.FC = () => {
   const [programs, setPrograms] = useState<Program[]>([]);
   const [colleges, setColleges] = useState<College[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [addProgramOptionSelected, setAddProgramOptionSelected] = useState(false);
+
+  const addProgramOption = "Add Program";
 
   const router = useRouter();
 
@@ -60,6 +70,11 @@ const NewDecisionForm: React.FC = () => {
   }, [collegeData]);
 
   const handleProgramSelected = (option: { label: string; value: string | number }) => {
+    if (option.label === addProgramOption) {
+      setAddProgramOptionSelected(true);
+    } else {
+      setAddProgramOptionSelected(false);
+    }
     setFormState(prev => ({
       ...prev,
       programId: Number(option.value),
@@ -87,6 +102,15 @@ const NewDecisionForm: React.FC = () => {
       setFormState(prevState => ({ ...prevState, [name]: Number(value) }));
     } else {
       setFormState(prevState => ({ ...prevState, [name]: value }));
+    }
+  };
+
+  const handleNewProgramChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    if (!isNaN(+value)) {
+      setAddProgramForm(prevState => ({ ...prevState, [name]: Number(value) }));
+    } else {
+      setAddProgramForm(prevState => ({ ...prevState, [name]: value }));
     }
   };
 
@@ -177,12 +201,46 @@ const handleDateChange = (date: Date | null) => {
      placeholder='Begin typing and select a program...'
      id='program-dropdown'
      name='program'
-     options={programData?.programs.map(p => ({ label: p.name, value: p.id })) ?? []}
+     options={programData?.programs.map(p => ({ label: p.name, value: p.id })).push({label: addProgramOption, value: -1}) ?? [{label: addProgramOption, value: -1}]}
      onOptionSelected={handleProgramSelected}
      onSearch={handleProgramSearchChange}
      disabled={!selectedCollgeId || !programDegreeType}
-
    />
+
+  {addProgramOptionSelected ? 
+    <div className='mb-4 space-y-4'>
+      <TextField
+        required={addProgramOptionSelected}
+        label='Program Name'
+        id="programName"
+        name="programName"
+        placeholder='Creative Writing and Screenwriting'
+        value={addProgramForm.name}
+        onChange={handleNewProgramChange}
+        className="w-full py-1 bg-surface border-mantle rounded-md p-2 focus:ring-lavender focus:outline-none"
+      />
+      <TextField
+        required={addProgramOptionSelected}
+        label='Program URL'
+        id="programUrl"
+        name="programUrl"
+        placeholder='www.uw.edu/creative-writing'
+        value={addProgramForm.url}
+        onChange={handleNewProgramChange}
+        className="w-full py-1 bg-surface border-mantle rounded-md p-2 focus:ring-lavender focus:outline-none"
+      />
+
+    <TextField
+        label='Department (optional)'
+        id="programDepartment"
+        name="programDepartment"
+        placeholder='www.uw.edu/creative-writing'
+        value={addProgramForm.department}
+        onChange={handleNewProgramChange}
+        className="w-full py-1 bg-surface border-mantle rounded-md p-2 focus:ring-lavender focus:outline-none"
+      />
+    </div> : <></>
+  }
 
   <div>
      <label htmlFor="term" className="block font-bold text-white">Term</label>
@@ -190,7 +248,7 @@ const handleDateChange = (date: Date | null) => {
        required={true}
        id="term"
        name="term"
-       value={formState.status}
+       value={formState.term}
        onChange={handleChange}
        className='block w-full py-1 bg-surface border-mantle rounded-md  p-2 focus:ring-lavender focus:outline-none'
      >
