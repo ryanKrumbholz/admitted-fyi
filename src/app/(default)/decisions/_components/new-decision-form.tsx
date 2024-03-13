@@ -18,16 +18,16 @@ import { Button } from '~/app/_components/button';
 import DatePicker from '~/app/_components/date-picker';
 import { Term } from '~/app/_models/Term';
 import { Residency } from '~/app/_models/Residency';
+import { type NewProgramInput } from '../../../../server/model/new-program-input';
 
 const ADD_PROGRAM_OPTION = "Add Program";
 const NEW_PROGRAM_OPTION = {label: ADD_PROGRAM_OPTION, value: -1}
 
 const NewDecisionForm: React.FC = () => {
   const [addProgramForm, setAddProgramForm] = useState({
-    name: '',
-    degreeType: DegreeType.BA,
-    department: '',
-    url: ''
+    name: undefined,
+    department: undefined,
+    url: undefined
   })
   const [formState, setFormState] = useState({
     programId: 0,
@@ -109,11 +109,8 @@ const NewDecisionForm: React.FC = () => {
 
   const handleNewProgramChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    if (!isNaN(+value)) {
-      setAddProgramForm(prevState => ({ ...prevState, [name]: Number(value) }));
-    } else {
-      setAddProgramForm(prevState => ({ ...prevState, [name]: value }));
-    }
+    console.log(name, value)
+    setAddProgramForm(prevState => ({ ...prevState, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -133,10 +130,18 @@ const NewDecisionForm: React.FC = () => {
               degreeType: formState.statsDegreeType,
           };
 
+          const newProgramInput: NewProgramInput | undefined = (programDegreeType && addProgramForm.name && addProgramForm.url) ?
+          {
+            url: addProgramForm.url,
+            name: addProgramForm.name,
+            degreeType: programDegreeType,
+            department: addProgramForm.department
+          } : undefined;
+
             const decisionInput: DecisionInput = {
                 statsInput: statsInput,
                 verificationInput: verificationInput,
-                newProgramInput: addProgramForm,
+                newProgramInput: newProgramInput,
                 programId: formState.programId,
                 status: formState.status,
                 collegeId: formState.collegeId,
@@ -216,7 +221,7 @@ const handleDateChange = (date: Date | null) => {
         required={addProgramOptionSelected}
         label='Program Name'
         id="programName"
-        name="programName"
+        name="name"
         placeholder='Creative Writing and Screenwriting'
         value={addProgramForm.name}
         onChange={handleNewProgramChange}
@@ -226,7 +231,7 @@ const handleDateChange = (date: Date | null) => {
         required={addProgramOptionSelected}
         label='Program URL'
         id="programUrl"
-        name="programUrl"
+        name="url"
         placeholder='www.uw.edu/creative-writing'
         value={addProgramForm.url}
         onChange={handleNewProgramChange}
@@ -236,7 +241,7 @@ const handleDateChange = (date: Date | null) => {
     <TextField
         label='Department (optional)'
         id="programDepartment"
-        name="programDepartment"
+        name="department"
         placeholder='www.uw.edu/creative-writing'
         value={addProgramForm.department}
         onChange={handleNewProgramChange}
