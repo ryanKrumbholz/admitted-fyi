@@ -1,186 +1,203 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+  previewFeatures = ["fullTextIndex", "fullTextSearch"]
 }
 
 datasource db {
   provider     = "postgresql"
   url          = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  directUrl    = env("DIRECT_URL")
   relationMode = "prisma"
 }
 
 model Account {
-  id                       String  @id @default(cuid())
-  userId                   String  @unique
-  type                     String
-  provider                 String
-  providerAccountId        String
+  id                       String  @id(map: "idx_28903_PRIMARY") @default(cuid()) @db.VarChar(191)
+  userId                   String  @unique(map: "idx_28903_Account_userId_key") @db.VarChar(191)
+  type                     String  @db.VarChar(191)
+  provider                 String  @db.VarChar(191)
+  providerAccountId        String  @db.VarChar(191)
   refresh_token            String? @db.VarChar(2000)
   refresh_token_expires_in Int?
   access_token             String? @db.VarChar(2000)
   expires_at               Int?
-  token_type               String?
-  scope                    String?
+  token_type               String? @db.VarChar(191)
+  scope                    String? @db.VarChar(191)
   id_token                 String? @db.VarChar(2000)
   session_state            String? @db.VarChar(2000)
   oauth_token_secret       String? @db.VarChar(2000)
   oauth_token              String? @db.VarChar(2000)
+  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
-  @@index([userId]) // Added index for userId relation
+  @@unique([provider, providerAccountId], map: "idx_28903_Account_provider_providerAccountId_key")
+  @@index([userId], map: "idx_28903_Account_userId_idx")
 }
 
 model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
+  id           String   @id(map: "idx_28928_PRIMARY") @default(cuid()) @db.VarChar(191)
+  sessionToken String   @unique(map: "idx_28928_Session_sessionToken_key") @db.VarChar(191)
+  userId       String   @db.VarChar(191)
+  expires      DateTime @db.Timestamptz(6)
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([userId]) // Confirming existing index
+  @@index([userId], map: "idx_28928_Session_userId_idx")
 }
 
 model User {
-  id               String           @id @default(cuid())
-  name             String?
-  email            String?          @unique
-  emailVerified    DateTime?
-  image            String?
+  id               String           @id(map: "idx_28936_PRIMARY") @default(cuid()) @db.VarChar(191)
+  name             String?          @db.VarChar(191)
+  email            String?          @unique(map: "idx_28936_User_email_key") @db.VarChar(191)
+  emailVerified    DateTime?        @db.Timestamptz(6)
+  image            String?          @db.VarChar(191)
+  resident         Boolean
   sessions         Session[]
   Account          Account?
   userPreferences  UserPreference[]
   decisions        Decision[]
-  resident         Boolean
   programWatchList Program[]        @relation("ProgramWatchList")
-
-  // No additional indexes required here as the primary relations are covered
 }
 
+/// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
 model College {
-  id        Int        @id @default(autoincrement())
-  name      String @unique
-  url       String?
+  id        Int        @id(map: "idx_28909_PRIMARY") @default(autoincrement())
+  name      String     @db.VarChar(191)
+  url       String?    @db.VarChar(191)
   programs  Program[]
   decisions Decision[]
-  // No additional indexes needed as there are no scalar fields for relations that aren't covered by relations
 }
 
+/// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
 model Program {
-  id         Int        @id @default(autoincrement())
+  id         Int                @id(map: "idx_28921_PRIMARY") @default(autoincrement())
   collegeId  Int
-  name       String
-  department String?
-  degreeType DegreeType
-  college    College    @relation(fields: [collegeId], references: [id])
+  name       String             @db.VarChar(191)
+  degreeType Program_degreeType
+  department String?            @db.VarChar(191)
+  url        String?            @db.VarChar(191)
+  verified   Boolean            @default(false)
+  college    College            @relation(fields: [collegeId], references: [id])
   decisions  Decision[]
-  watchers   User[]     @relation("ProgramWatchList")
-  verified   Boolean    @default(false)
-  url        String?
+  watchers   User[]             @relation("ProgramWatchList")
 
-  @@unique([name, collegeId, degreeType])
-  @@index([collegeId, degreeType]) // Confirming existing index
+  @@index([collegeId, degreeType], map: "idx_28921_Program_collegeId_degreeType_idx")
 }
 
 model Decision {
-  id             String   @id @default(cuid())
-  userId         String
-  collegeId      Int
+  id             String              @id(map: "idx_28913_PRIMARY") @default(cuid()) @db.VarChar(191)
+  userId         String              @db.VarChar(191)
   programId      Int
-  status         Status
-  date           DateTime @default(now())
-  verificationId String   @unique
-  statsId        String   @unique
-  term           Term
-  termYearString String
+  status         Decision_status
+  date           DateTime            @default(now()) @db.Timestamptz(6)
+  verificationId String              @unique(map: "idx_28913_Decision_verificationId_key") @db.VarChar(191)
+  collegeId      Int
+  statsId        String              @unique(map: "idx_28913_Decision_statsId_key") @db.VarChar(191)
+  term           Decision_term
+  termYearString String              @db.VarChar(191)
+  visibility     Decision_visibility @default(VISIBLE)
+  college        College             @relation(fields: [collegeId], references: [id])
+  user           User?               @relation(fields: [userId], references: [id])
+  program        Program             @relation(fields: [programId], references: [id])
+  stats          Stats               @relation(fields: [statsId], references: [id])
+  verification   Verification        @relation(fields: [verificationId], references: [id])
 
-  college      College      @relation(fields: [collegeId], references: [id])
-  user         User?        @relation(fields: [userId], references: [id])
-  program      Program      @relation(fields: [programId], references: [id])
-  stats        Stats        @relation(fields: [statsId], references: [id])
-  verification Verification @relation(fields: [verificationId], references: [id])
-  visibility   Visibility   @default(VISIBLE)
-
-  @@index([userId, collegeId, programId, statsId, verificationId]) // Added indexes for relation fields
+  @@index([userId, collegeId, programId, statsId, verificationId], map: "idx_28913_Decision_userId_collegeId_programId_statsId_verificat")
 }
 
 model Verification {
-  id       String    @id @default(cuid())
+  id       String    @id(map: "idx_28948_PRIMARY") @default(cuid()) @db.VarChar(191)
   verified Boolean
-  imgUrl   String?
+  imgUrl   String?   @db.VarChar(191)
   decision Decision?
-
-  // No indexes added here as there are no scalar fields for relations that aren't covered by relations
 }
 
 model UserPreference {
-  id              Int    @id @default(autoincrement())
-  userId          String
-  preferenceType  String
-  preferenceValue String
+  id              Int    @id(map: "idx_28942_PRIMARY") @default(autoincrement())
+  userId          String @db.VarChar(191)
+  preferenceType  String @db.VarChar(191)
+  preferenceValue String @db.VarChar(191)
   user            User   @relation(fields: [userId], references: [id])
 
-  @@index([userId]) // Added index for userId relation
+  @@index([userId], map: "idx_28942_UserPreference_userId_idx")
 }
 
 model Stats {
-  id         String      @id @default(cuid())
+  id         String            @id(map: "idx_28933_PRIMARY") @default(cuid()) @db.VarChar(191)
   gpa        Float?
-  degreeType DegreeType?
+  degreeType Stats_degreeType?
+  residency  Stats_residency?
   decision   Decision?
-  residency  Residency?
-
-  // No additional indexes required as there are no scalar fields for relations
 }
 
-enum Status {
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model ProgramWatchList {
+  A Int
+  B String @db.VarChar(191)
+
+  @@unique([A, B], map: "idx_28951__ProgramWatchList_AB_unique")
+  @@index([B], map: "idx_28951__ProgramWatchList_B_index")
+  @@map("_ProgramWatchList")
+}
+
+enum Decision_status {
   WAITLISTED
   INTERVIEW
   ACCEPTED
   REJECTED
 }
 
-enum Residency {
-  AMERICAN
-  INTERNATIONAL
-}
-
-enum Term {
+enum Decision_term {
   FALL
   WINTER
   SPRING
   SUMMER
 }
 
-enum DegreeType {
-  BA // Bachelor of Arts
-  BS // Bachelor of Science
-  BFA // Bachelor of Fine Arts
-  MA // Master of Arts
-  MS // Master of Science
-  MBA // Master of Business Administration
-  MFA // Master of Fine Arts
-  PsyD
-  PhD // Doctor of Philosophy
-  MD // Doctor of Medicine
-  JD // Juris Doctor
-  EdD // Doctor of Education
-  DDS // Doctor of Dental Surgery
-  DVM // Doctor of Veterinary Medicine
-  LLB // Bachelor of Laws
-  LLM // Master of Laws
-
-}
-
-enum Visibility {
+enum Decision_visibility {
   HIDDEN
   DRAFT
   VISIBLE
   NEEDS_REVIEW
   DELETED
+}
+
+enum Program_degreeType {
+  BA
+  BS
+  BFA
+  MA
+  MS
+  MBA
+  MFA
+  PhD
+  MD
+  JD
+  EdD
+  DDS
+  DVM
+  LLB
+  LLM
+  PsyD
+}
+
+enum Stats_degreeType {
+  BA
+  BS
+  BFA
+  MA
+  MS
+  MBA
+  MFA
+  PhD
+  MD
+  JD
+  EdD
+  DDS
+  DVM
+  LLB
+  LLM
+  PsyD
+}
+
+enum Stats_residency {
+  AMERICAN
+  INTERNATIONAL
 }
