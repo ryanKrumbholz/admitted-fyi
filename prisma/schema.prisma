@@ -7,8 +7,9 @@ generator client {
 }
 
 datasource db {
-  provider     = "mysql"
+  provider     = "postgresql"
   url          = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
   relationMode = "prisma"
 }
 
@@ -63,13 +64,11 @@ model User {
 
 model College {
   id        Int        @id @default(autoincrement())
-  name      String
+  name      String @unique
   url       String?
   programs  Program[]
   decisions Decision[]
   // No additional indexes needed as there are no scalar fields for relations that aren't covered by relations
-
-  @@fulltext([name])
 }
 
 model Program {
@@ -84,8 +83,8 @@ model Program {
   verified   Boolean    @default(false)
   url        String?
 
+  @@unique([name, collegeId, degreeType])
   @@index([collegeId, degreeType]) // Confirming existing index
-  @@fulltext([name])
 }
 
 model Decision {
@@ -166,6 +165,7 @@ enum DegreeType {
   MS // Master of Science
   MBA // Master of Business Administration
   MFA // Master of Fine Arts
+  PsyD
   PhD // Doctor of Philosophy
   MD // Doctor of Medicine
   JD // Juris Doctor
@@ -174,7 +174,7 @@ enum DegreeType {
   DVM // Doctor of Veterinary Medicine
   LLB // Bachelor of Laws
   LLM // Master of Laws
-  PsyD
+
 }
 
 enum Visibility {
