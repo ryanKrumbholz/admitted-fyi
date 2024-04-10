@@ -1,14 +1,14 @@
 import { TRPCError } from '@trpc/server';
 import { createTRPCRouter, internalProcedure, publicProcedure } from '../trpc';
 import { z } from 'zod';
-import { DegreeType } from '@prisma/client';
+import { Program_degreeType } from '@prisma/client';
 
 export const programRouter = createTRPCRouter({
   add: publicProcedure
   .input(
     z.object({
       collegeId: z.number(),
-      degreeType: z.nativeEnum(DegreeType),
+      degreeType: z.nativeEnum(Program_degreeType),
       department: z.string().optional(),
       name: z.string(),
       url: z.string()
@@ -26,7 +26,7 @@ export const programRouter = createTRPCRouter({
         skip: z.number().min(0).optional(),
         searchString: z.string().optional(),
         collegeId: z.number(),
-        degreeType: z.nativeEnum(DegreeType)
+        degreeType: z.nativeEnum(Program_degreeType)
       }).optional(),
     )
     .query(async ({ ctx, input }) => {

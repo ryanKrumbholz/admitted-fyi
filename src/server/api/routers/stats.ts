@@ -1,16 +1,16 @@
 import { TRPCError } from '@trpc/server';
 import { createTRPCRouter, internalProcedure } from '../trpc';
 import { z } from 'zod';
-import { Stats, DegreeType, Residency } from '@prisma/client';
+import { type Stats, Program_degreeType, Stats_residency } from '@prisma/client';
 
 export const statsRouter = createTRPCRouter({
   add: internalProcedure
     .input(
       z.object({
         gpa: z.number().optional(),
-        residency: z.nativeEnum(Residency).optional(),
+        residency: z.nativeEnum(Stats_residency).optional(),
         greWritten: z.number().optional(),
-        degreeType: z.nativeEnum(DegreeType).optional(),
+        degreeType: z.nativeEnum(Program_degreeType).optional(),
       }),
     )
     .mutation(async ({ ctx, input }) : Promise<Stats> => {

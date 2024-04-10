@@ -1,8 +1,8 @@
-import { type DegreeType } from "@prisma/client";
+import { type Program_degreeType } from "@prisma/client";
 
 export interface NewProgramInput {
     name: string,
-    degreeType: DegreeType,
+    degreeType: Program_degreeType,
     department?: string,
     url: string
 }

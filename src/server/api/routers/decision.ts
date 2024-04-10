@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server'
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc'
 import { z } from 'zod'
-import { Status, type Stats, type Verification, DegreeType, Term, Residency, Visibility } from '@prisma/client';
+import { Decision_status, type Stats, type Verification, Program_degreeType, Decision_term, Stats_residency, Decision_visibility } from '@prisma/client';
 import { api } from '~/trpc/server';
 import { getServerSession } from 'next-auth';
 import { genHeadlessUserId } from '~/app/_util/user';
@@ -46,7 +46,7 @@ export const decisionRouter = createTRPCRouter({
           skip: z.number().min(0).optional(),
           userId: z.string().optional(),
           programId: z.number().optional(),
-          status: z.nativeEnum(Status).optional(),
+          status: z.nativeEnum(Decision_status).optional(),
           searchString: z.string().optional(),
         })
         .optional(),
@@ -58,7 +58,7 @@ export const decisionRouter = createTRPCRouter({
         userId,
         programId, 
         status,
-        visibility: Visibility.VISIBLE,
+        visibility: Decision_visibility.VISIBLE,
         OR: searchString ? [
           { program: { name: { contains: searchString} } },
           { program: { college: { name: { contains: searchString } } } },
@@ -123,24 +123,24 @@ export const decisionRouter = createTRPCRouter({
       z.object({
         programId: z.number().int(),
         newProgramInput: z.object({
-          degreeType: z.nativeEnum(DegreeType),
+          degreeType: z.nativeEnum(Program_degreeType),
           department: z.string().optional(),
           name: z.string(),
           url: z.string()
         }).optional(),
-        status: z.nativeEnum(Status),
+        status: z.nativeEnum(Decision_status),
         collegeId: z.number().int(),
         date: z.date(),
-        term: z.nativeEnum(Term),
+        term: z.nativeEnum(Decision_term),
         verificationInput: z.object({
           verified: z.boolean(),
           imgUrl: z.string()
         }),
         statsInput:  z.object({
             gpa: z.number().optional(),
-            residency: z.nativeEnum(Residency).optional(),
+            residency: z.nativeEnum(Stats_residency).optional(),
             greWritten: z.number().optional(),
-            degreeType: z.nativeEnum(DegreeType).optional(),
+            degreeType: z.nativeEnum(Program_degreeType).optional(),
           
         })
       }),
@@ -157,9 +157,9 @@ export const decisionRouter = createTRPCRouter({
       const statsId = statsResult.id;
       const userId = session?.user ? session.user.id : genHeadlessUserId();
 
-      let visibility: Visibility = Visibility.VISIBLE;
+      let visibility: Decision_visibility = Decision_visibility.VISIBLE;
       if (programId === -1) {
-        visibility = Visibility.NEEDS_REVIEW;
+        visibility = Decision_visibility.NEEDS_REVIEW;
         if (newProgramInput) {
           const response = await api.program.add.mutate({
             collegeId: collegeId,
@@ -199,7 +199,7 @@ export const decisionRouter = createTRPCRouter({
       z.object({
         id: z.string(),
         data: z.object({
-          status: z.nativeEnum(Status).optional(),
+          status: z.nativeEnum(Decision_status).optional(),
           content: z.string().min(1).optional(),
         }),
       }),
