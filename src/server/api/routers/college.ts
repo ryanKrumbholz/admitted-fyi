@@ -17,13 +17,9 @@ export const collegeRouter = createTRPCRouter({
 
       const where = searchString
         ? {
-          OR: [
-            {
-              name: {
-                startsWith: searchString, // Priority to names that start with the search term
-              },
-            },
-          ],
+          name: {
+            search: searchString,
+          },
         } : {};
 
       const colleges = await ctx.db.college.findMany({
@@ -31,9 +27,12 @@ export const collegeRouter = createTRPCRouter({
         skip,
         where,
         orderBy: {
-          name: 'asc', // Adjust ordering as needed
-        },
-      });
+          _relevance: {
+            fields: ['name'],
+            search: 'database',
+            sort: 'asc'
+          },
+      }});
 
       return {
         colleges

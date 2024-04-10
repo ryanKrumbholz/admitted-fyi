@@ -35,8 +35,10 @@ export const programRouter = createTRPCRouter({
       const where = {
         AND: [
           searchString ? {
-            name: { startsWith: searchString },
-          } : {},
+          name: {
+            search: searchString,
+          },
+        } : {},
           { collegeId, degreeType },
         ],
       };
