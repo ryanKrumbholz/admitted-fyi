@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import { createTRPCRouter, internalProcedure, publicProcedure } from '../trpc';
 import { z } from 'zod';
-import { Program_degreeType } from '@prisma/client';
+import { Prisma, type Program, Program_degreeType } from '@prisma/client';
 
 export const programRouter = createTRPCRouter({
   add: publicProcedure
@@ -32,29 +32,35 @@ export const programRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const { take = 50, skip, searchString, collegeId, degreeType } = input ?? {};
 
-      const where = {
-        AND: [
-          searchString ? {
-          name: {
-            search: searchString,
-          },
-        } : {},
-          { collegeId, degreeType },
-        ],
-      };
-
-      const programs = await ctx.db.program.findMany({
-        take,
-        skip,
-        where,
-        include: {
-          college: true
-        },
-        orderBy: { name: 'asc' },
-      });
-
-      return {
-        programs,
-      };
+      if (searchString) {
+        const formattedSearchString = `${searchString.replace(/\s+/g, ' & ')}:*`;
+        const programs = await ctx.db.$queryRaw(Prisma.sql`
+          SELECT p."id", p."name", p."department", p."url", p."verified", c."id" AS "college_id", c."name" AS "college_name"
+          FROM "Program" p
+          INNER JOIN "College" c ON p."collegeId" = c."id"
+          WHERE p."search_vector" @@ to_tsquery(${formattedSearchString}) AND
+                p."collegeId" = ${collegeId} AND
+                p."degreeType"::text = ${degreeType}
+          ORDER BY p."name"
+          LIMIT ${take} OFFSET ${skip}
+      `);
+      return { programs: programs as Program[] }
+      } else {
+        const programs = await ctx.db.program.findMany({
+            take,
+            skip,
+            where: {
+              collegeId,
+              degreeType,
+            },
+            include: {
+              college: true,
+            },
+            orderBy: {
+              name: 'asc',
+            },
+          })
+        return { programs }
+      }
     }),
 });

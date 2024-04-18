@@ -63,6 +63,10 @@ model College {
   url       String?    @db.VarChar(191)
   programs  Program[]
   decisions Decision[]
+
+  search_vector  Unsupported("TSVECTOR")?
+
+  @@index([search_vector])
 }
 
 /// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
@@ -78,6 +82,9 @@ model Program {
   decisions  Decision[]
   watchers   User[]             @relation("ProgramWatchList")
 
+  search_vector  Unsupported("TSVECTOR")?
+
+  @@index([search_vector])
   @@index([collegeId, degreeType], map: "idx_28921_Program_collegeId_degreeType_idx")
 }
 
@@ -99,6 +106,9 @@ model Decision {
   stats          Stats               @relation(fields: [statsId], references: [id])
   verification   Verification        @relation(fields: [verificationId], references: [id])
 
+  search_vector  Unsupported("TSVECTOR")?
+
+  @@index([search_vector])
   @@index([userId, collegeId, programId, statsId, verificationId], map: "idx_28913_Decision_userId_collegeId_programId_statsId_verificat")
 }
 

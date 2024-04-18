@@ -1,6 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import { createTRPCRouter, publicProcedure } from '../trpc';
 import { z } from 'zod';
+import { type College, Prisma } from '@prisma/client';
 
 export const collegeRouter = createTRPCRouter({
   // Query colleges with optional filters
@@ -15,28 +16,32 @@ export const collegeRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const { take = 50, skip, searchString } = input ?? {};
 
-      const where = searchString
-        ? {
-          name: {
-            search: searchString,
+      if (searchString) {
+        // Prepare the formatted search string for full-text search
+        const formattedSearchString = `${searchString.split(' ').join(' & ')}:*`; // Formats searchString for tsquery
+  
+        // Execute the full-text search using raw SQL
+        const colleges = await ctx.db.$queryRaw(Prisma.sql`
+          SELECT "id", "name", "url"
+          FROM "College"
+          WHERE "search_vector" @@ to_tsquery(${formattedSearchString})
+          ORDER BY ts_rank_cd("search_vector", to_tsquery(${formattedSearchString})) DESC
+          LIMIT ${take} OFFSET ${skip}
+        `);
+  
+        return { colleges: colleges as College[] };
+      } else {
+        // If no searchString is provided, fallback to a standard Prisma query
+        const colleges = await ctx.db.college.findMany({
+          take,
+          skip,
+          orderBy: {
+            name: 'asc',
           },
-        } : {};
-
-      const colleges = await ctx.db.college.findMany({
-        take,
-        skip,
-        where,
-        orderBy: {
-          _relevance: {
-            fields: ['name'],
-            search: 'database',
-            sort: 'asc'
-          },
-      }});
-
-      return {
-        colleges
-      };
+        });
+  
+        return { colleges };
+      }
     }),
 
 //   // Add a new college

@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server'
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc'
 import { z } from 'zod'
-import { Decision_status, type Stats, type Verification, Program_degreeType, Decision_term, Stats_residency, Decision_visibility } from '@prisma/client';
+import { Decision_status, type Stats, type Verification, Program_degreeType, Decision_term, Stats_residency, Decision_visibility, Prisma } from '@prisma/client';
 import { api } from '~/trpc/server';
 import { getServerSession } from 'next-auth';
 import { genHeadlessUserId } from '~/app/_util/user';
@@ -54,16 +54,35 @@ export const decisionRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const { take = 50, skip, userId, programId, status, searchString } = input ?? {}
 
-      const where = {
-        userId,
-        programId, 
-        status,
-        visibility: Decision_visibility.VISIBLE,
-        OR: searchString ? [
-          { program: { name: { contains: searchString} } },
-          { program: { college: { name: { contains: searchString } } } },
-        ] : undefined
-      };
+      let where;
+  
+      if (searchString) {
+        const searchQuery = Prisma.sql`
+          SELECT "id" FROM "Decision"
+          WHERE "search_vector" @@ to_tsquery(${searchString.split(' ').join(' & ')})
+        `;
+  
+        const searchResults = await ctx.db.$queryRaw<{ id: string }[]>(searchQuery);
+  
+        const decisionIds = searchResults.map(result => result.id);
+  
+        where = {
+          userId,
+          programId, 
+          status,
+          visibility: Decision_visibility.VISIBLE,
+          id: {
+            in: decisionIds,
+          },
+        };
+      } else {
+        where = {
+          userId,
+          programId, 
+          status,
+          visibility: Decision_visibility.VISIBLE,
+        };
+      }
 
       if (userId) {
         where.userId = userId;
